@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artists</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Artists</h1>
+    </header>
+    <div class="container">
+        <section id="artists">
+            {{with index . "https://groupietrackers.herokuapp.com/api/artists"}}
+            {{range .}}
+            <div class="card">
+                <img src="{{.Image}}" alt="{{.Name}}" width="100">
+                <div>
+                    <h3>{{.Name}}</h3>
+                    <p><strong>Year Started:</strong> {{.Year}}</p>
+                    <p><strong>First Album:</strong> {{.FirstAlbum}}</p>
+                    <p><strong>Members:</strong> {{range .Members}}{{.}} {{end}}</p>
+                </div>
+            </div>
+            {{end}}
+            {{else}}
+            <p>No artists data available.</p>
+            {{end}}
+        </section>
+    </div>
+</body>
+</html>
