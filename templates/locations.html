@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Locations</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Locations</h1>
+    </header>
+    <div class="container">
+        <section id="locations">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Venue</th>
+                            <th>City</th>
+                            <th>Country</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{with index .	"https://groupietrackers.herokuapp.com/api/locations/"}}
+                        {{range .}}
+                        <tr>
+                            <td>{{.Locations}}</td>
+                            <td>{{.City}}</td>
+                            <td>{{.Country}}</td>
+                        </tr>
+                        {{end}}
+                        {{else}}
+                        <tr><td colspan="3">No locations data available.</td></tr>
+                        {{end}}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+</body>
+</html>
