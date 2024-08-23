@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relations</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Relations</h1>
+    </header>
+    <div class="container">
+        <section id="relations">
+            <ul class="list">
+                {{with index . 	"https://groupietrackers.herokuapp.com/api/relation"}}
+                {{range .}}
+                <li class="list-item">
+                    <p><strong>Artist ID:</strong> {{.ArtistID}}</p>
+                    <p><strong>Date ID:</strong> {{.DateID}}</p>
+                    <p><strong>Location ID:</strong> {{.LocationID}}</p>
+                </li>
+                {{end}}
+                {{else}}
+                <li class="list-item">No relations data available.</li>
+                {{end}}
+            </ul>
+        </section>
+    </div>
+</body>
+</html>
