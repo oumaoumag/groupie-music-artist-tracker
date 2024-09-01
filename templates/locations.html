@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tour Locations</title>
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+</head>
+<body>
+    <h1>Tour Locations</h1>
+    <ul>
+        {{range .Index}}
+        <li>
+            <h2>Tour ID: {{.ID}}</h2>
+            <ul>
+                {{range .Locations}}
+                <li>{{.}}</li>
+                {{end}}
+            </ul>
+        </li>
+        {{end}}
+    </ul>
+</body>
+</html>
