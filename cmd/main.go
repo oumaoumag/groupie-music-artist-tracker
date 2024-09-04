@@ -15,8 +15,10 @@ func homepageHandler(w http.ResponseWriter, r *http.Request) {
 	// Parse the template file
 	t, err := template.ParseFiles("templates/homepage.html")
 	if err != nil {
-	
-		
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
 
 	// Execute the template with no data
 	if err := t.Execute(w, nil); err != nil {
