@@ -2,26 +2,34 @@ body {
     font-family: Arial, sans-serif;
 }
 
-ul {
-    list-style-type: none;
-    padding: 0;
+h1 {
+    text-align: center;
+    color: #333;
 }
-
 nav {
     margin: 20px 0;
     text-align: center;
 }
-li {display: inline;
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
 
-    margin-bottom: 10px;
+
+li {
+    display: inline;
+    margin-bottom: 0 15px;
 }
 
 a {
     text-decoration: none;
-    color: #0066cc;
+    color: #007BFF;
+    font-weight: bold;
 }
 
 a:hover {
+    color: #0056b3;
     text-decoration: underline;
 }
 
@@ -35,16 +43,4 @@ a:hover {
 img {
     max-width: 200px;
     border-radius: 5px;
-}
-
-a {
-    text-decoration: none;
-    color: #007BFF;
-    font-weight: bold;
-}
-
-
-
-a:hover {
-    color: #0056b3;
 }
