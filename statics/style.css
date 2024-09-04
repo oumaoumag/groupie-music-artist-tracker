@@ -2,21 +2,34 @@ body {
     font-family: Arial, sans-serif;
 }
 
+h1 {
+    text-align: center;
+    color: #333;
+}
+nav {
+    margin: 20px 0;
+    text-align: center;
+}
 ul {
     list-style-type: none;
     padding: 0;
+    margin: 0;
 }
 
+
 li {
-    margin-bottom: 10px;
+    display: inline;
+    margin-bottom: 0 15px;
 }
 
 a {
     text-decoration: none;
-    color: #0066cc;
+    color: #007BFF;
+    font-weight: bold;
 }
 
 a:hover {
+    color: #0056b3;
     text-decoration: underline;
 }
 

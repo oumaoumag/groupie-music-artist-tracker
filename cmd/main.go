@@ -28,7 +28,7 @@ func main() {
     http.HandleFunc("/locations", api.LocationsHandler)
     http.HandleFunc("/relations", api.RelationsHandler)
     
-    http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("templates"))))
+    http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	log.Println("Server running on http://localhost:8080")
     log.Fatal(http.ListenAndServe(":8080", nil))
 }
