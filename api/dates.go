@@ -16,10 +16,16 @@ type DatesAPIResponse struct {
 }
 
 func DatesHandler(w http.ResponseWriter, r *http.Request) {
+    if r.Method != http.MethodGet {
+		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+    
     url := "https://groupietrackers.herokuapp.com/api/dates"
     data, err := fetchData(url, &DatesAPIResponse{})
     if err != nil {
-        http.Error(w, err.Error(), http.StatusInternalServerError)
+        http.Error(w, "Internal Server Error", http.StatusInternalServerError)
         return
     }
     renderTemplate(w, "dates.html", data)
