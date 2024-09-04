@@ -7,7 +7,12 @@ ul {
     padding: 0;
 }
 
-li {
+nav {
+    margin: 20px 0;
+    text-align: center;
+}
+li {display: inline;
+
     margin-bottom: 10px;
 }
 
@@ -30,4 +35,16 @@ a:hover {
 img {
     max-width: 200px;
     border-radius: 5px;
+}
+
+a {
+    text-decoration: none;
+    color: #007BFF;
+    font-weight: bold;
+}
+
+
+
+a:hover {
+    color: #0056b3;
 }
