@@ -7,13 +7,16 @@ import (
 	"text/template"
 )
 func homepageHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+		return
+	}
+	
 	// Parse the template file
 	t, err := template.ParseFiles("templates/homepage.html")
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
+	
+		
 
 	// Execute the template with no data
 	if err := t.Execute(w, nil); err != nil {
