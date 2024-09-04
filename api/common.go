@@ -1,9 +1,10 @@
 package api
 
 import (
-    "encoding/json"
-    "html/template"
-    "net/http"
+	"encoding/json"
+	"fmt"
+	"html/template"
+	"net/http"
 )
 
 func fetchData(url string, target interface{}) (interface{}, error) {
@@ -12,6 +13,9 @@ func fetchData(url string, target interface{}) (interface{}, error) {
         return nil, err
     }
     defer resp.Body.Close()
+    if resp.StatusCode != http.StatusOK {
+        return nil, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
+    }
 
     if err := json.NewDecoder(resp.Body).Decode(target); err != nil {
         return nil, err
@@ -22,10 +26,11 @@ func fetchData(url string, target interface{}) (interface{}, error) {
 func renderTemplate(w http.ResponseWriter, tmpl string, data interface{}) {
     t, err := template.ParseFiles("templates/" + tmpl)
     if err != nil {
-        http.Error(w, err.Error(), http.StatusInternalServerError)
-        return
+        http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
     }
     if err := t.Execute(w, data); err != nil {
-        http.Error(w, err.Error(), http.StatusInternalServerError)
+        http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		
     }
 }
