@@ -8,19 +8,21 @@
 </head>
 <body>
     <h1>Artists Information</h1>
-    <ul>
+    <div class="artists-grid">
         {{range .}}
-        <li>
+        <div class="artist-card">
+            <img src="{{.Image}}" alt="{{.Name}}">
             <h2>{{.Name}}</h2>
-            <img src="{{.Image}}" alt="{{.Name}}" style="width:200px;">
-            <strong>Creation Date:</strong> {{.CreationDate}}<br>
-            <strong>First Album:</strong> {{.FirstAlbum}}<br>
-            <strong>Members:</strong> {{range .Members}}{{.}}, {{end}}<br>
-            <a href="{{.Locations}}">Locations</a> |
-            <a href="{{.ConcertDates}}">Concert Dates</a> |
-            <a href="{{.Relations}}">Relations</a>
-        </li>
+            <p><strong>Creation Date:</strong> {{.CreationDate}}</p>
+            <p><strong>First Album:</strong> {{.FirstAlbum}}</p>
+            <p><strong>Members:</strong> {{range .Members}}{{.}}, {{end}}</p>
+            <div class="artist-links">
+                <a href="{{.Locations}}" class="btn">Locations</a>
+                <a href="{{.ConcertDates}}" class="btn">Concert Dates</a>
+                <a href="{{.Relations}}" class="btn">Relations</a>
+            </div>
+        </div>
         {{end}}
-    </ul>
+    </div>
 </body>
 </html>
