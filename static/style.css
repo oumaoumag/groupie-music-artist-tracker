@@ -1,25 +1,30 @@
+/* Global Styles */
 body {
     font-family: Arial, sans-serif;
-    background-image: url('/static/background.png');
+    background-color: black;
+    /* Uncomment the lines below if you want to use a background image */
+    /* background-image: url('/static/background.png');
     background-size: cover;
     background-position: center;
-    background-repeat: no-repeat;
+    background-repeat: no-repeat; */
+    color: #fff; /* Set default text color to white for better readability on dark background */
 }
 
 h1 {
     text-align: center;
     color: #333;
 }
+
 nav {
     margin: 20px 0;
     text-align: center;
 }
+
 ul {
     list-style-type: none;
     padding: 0;
     margin: 0;
 }
-
 
 li {
     display: inline;
@@ -37,14 +42,37 @@ a:hover {
     text-decoration: underline;
 }
 
+/* Card Styles */
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
 .card {
     border: 1px solid #ddd;
+    border-radius: 5px;
     padding: 20px;
     margin: 10px;
+    width: 300px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    background-color: #f9f9f9;
+}
+
+.card img {
+    max-width: 200px;
+    height: auto;
     border-radius: 5px;
 }
 
-img {
-    max-width: 200px;
-    border-radius: 5px;
+.card h2 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.card a {
+    margin: 5px;
+    display: inline-block;
 }
