@@ -1,9 +1,10 @@
 package api
 
 import (
-    // "encoding/json"
-    // "html/template"
-    "net/http"
+	// "encoding/json"
+	// "html/template"
+	"net/http"
+	"strings"
 )
 
 type Artist struct {
@@ -25,12 +26,21 @@ func ArtistsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
     
+    searchQuery := r.URL.Query().Get("search")
     url := "https://groupietrackers.herokuapp.com/api/artists"
-    data, err := fetchData(url, &[]Artist{})
-    if err != nil {
-        
-         http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-        return
+    data := []Artist{}
+    if _, err := fetchData(url, &data); err != nil {
+        http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+    }
+
+    if searchQuery != "" {
+        filtered := []Artist{}
+        for _, artist := range data {
+            if strings.Contains(strings.ToLower(artist.Name), strings.ToLower(searchQuery)) {
+                filtered = append(filtered, artist)
+            }
+        }
+        data = filtered
     }
     renderTemplate(w, "artists.html", data)
 }
