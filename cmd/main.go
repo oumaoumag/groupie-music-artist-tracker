@@ -7,6 +7,7 @@ import (
 	"text/template"
 )
 
+// homepageHandler: handles requests to the homepagae of the website
 func homepageHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
@@ -27,7 +28,7 @@ func homepageHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-
+	// A new Handler instance, passing in the FetchData and RenderTemplate functions from the api package
 	handler := &api.Handler{
 		FetchData:      api.FetchData,
 		RenderTemplate: api.RenderTemplate,
@@ -35,7 +36,7 @@ func main() {
 
 	http.HandleFunc("/", homepageHandler)
 	http.HandleFunc("/artists", handler.ArtistsHandler)
-	// http.HandleFunc("/dates", handler.DatesHandler)
+	//http.HandleFunc("/dates", handler.DatesHandler)
 	// http.HandleFunc("/locations", handler.LocationsHandler)
 	// http.HandleFunc("/relations", handler.RelationsHandler)
 
