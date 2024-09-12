@@ -21,8 +21,8 @@ type Artist struct {
 
 // Handler struct encapsulates dependencies for our HTTP handlers
 type Handler struct {
-	fetchData      func(url string, target interface{}) (interface{}, error)
-	renderTemplate func(w http.ResponseWriter, tmpl string, data interface{})
+	FetchData      func(url string, target interface{}) (interface{}, error)
+	RenderTemplate func(w http.ResponseWriter, tmpl string, data interface{})
 }
 
 func (h *Handler) ArtistsHandler(w http.ResponseWriter, r *http.Request) {
@@ -36,7 +36,7 @@ func (h *Handler) ArtistsHandler(w http.ResponseWriter, r *http.Request) {
 	url := "https://groupietrackers.herokuapp.com/api/artists"
 	data := []Artist{}
 
-	if _, err := h.fetchData(url, &data); err != nil {
+	if _, err := h.FetchData(url, &data); err != nil {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -50,5 +50,5 @@ func (h *Handler) ArtistsHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		data = filtered
 	}
-	h.renderTemplate(w, "artists.html", data)
+	h.RenderTemplate(w, "artists.html", data)
 }
