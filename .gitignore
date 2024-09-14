@@ -1,0 +1,8 @@
+# Ignore the .air.toml file
+.air.toml
+
+# Ignore the cmd/tmp/ directory
+cmd/tmp/
+
+# Ignore the tmp/ directory
+tmp/
