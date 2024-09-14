@@ -1,26 +1,31 @@
 package api
 
 import (
-    // "encoding/json"
-    // "html/template"
-    "net/http"
+	// "encoding/json"
+	// "html/template"
+	"net/http"
 )
 
 type Date struct {
-    ID    int      `json:"id"`
-    Dates []string `json:"dates"`
+	ID    int      `json:"id"`
+	Dates []string `json:"dates"`
 }
 
 type DatesAPIResponse struct {
-    Index []Date `json:"index"`
+	Index []Date `json:"index"`
 }
 
 func DatesHandler(w http.ResponseWriter, r *http.Request) {
-    url := "https://groupietrackers.herokuapp.com/api/dates"
-    data, err := fetchData(url, &DatesAPIResponse{})
-    if err != nil {
-        http.Error(w, err.Error(), http.StatusInternalServerError)
-        return
-    }
-    renderTemplate(w, "dates.html", data)
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	url := "https://groupietrackers.herokuapp.com/api/dates"
+	data, err := FetchData(url, &DatesAPIResponse{})
+	if err != nil {
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	RenderTemplate(w, "dates.html", data)
 }

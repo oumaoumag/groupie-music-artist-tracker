@@ -8,7 +8,11 @@
 </head>
 <body>
     <h1>Artists Information</h1>
-    <div class="container">
+    <form method="GET" action="/artists">
+        <input type="text" name="search" placeholder="Search artists...">
+        <button type="submit">Search</button>
+    </form>
+    <div class="artists-grid">
         {{range .}}
         <div class="card">
             <h2>{{.Name}}</h2>

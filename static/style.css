@@ -1,78 +1,114 @@
-/* Global Styles */
+
 body {
     font-family: Arial, sans-serif;
-    background-color: black;
-    /* Uncomment the lines below if you want to use a background image */
-    /* background-image: url('/static/background.png');
-    background-size: cover;
+    /* background-color: black; */
+    background-image: url('/static/b2.jpg');
+    background-size: contain;
     background-position: center;
-    background-repeat: no-repeat; */
-    color: #fff; /* Set default text color to white for better readability on dark background */
+    background-attachment: fixed; /* keeps the background image fixed when scrolling*/
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
 }
 
 h1 {
     text-align: center;
-    color: #333;
-}
-
-nav {
-    margin: 20px 0;
-    text-align: center;
-}
-
-ul {
-    list-style-type: none;
-    padding: 0;
+    padding: 20px 0;
+    background-color: rgba(0, 0, 0, 0.5);
     margin: 0;
 }
 
-li {
-    display: inline;
-    margin: 0 15px;
-}
-
-a {
-    text-decoration: none;
-    color: #007BFF;
-    font-weight: bold;
-}
-
-a:hover {
-    color: #0056b3;
-    text-decoration: underline;
-}
-
-/* Card Styles */
-.container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-}
-
-.card {
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 20px;
-    margin: 10px;
-    width: 300px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+nav {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 0;
     text-align: center;
-    background-color: #f9f9f9;
 }
 
-.card img {
-    max-width: 200px;
+nav a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    margin: 0 15px
+}
+
+nav a:hover {
+    color: #007BFF;
+}
+
+
+nav ul {
+    list-style-type: none; /* removes default list styling */
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline; /* Align list items horizontally */
+}
+
+nav ul li a {
+    padding: 14px 20px; /* Padding for links */
+    text-decoration: none; /* remove underline */
+    color: #fff; /* Text color */
+}
+
+
+.artists-grid {
+    display: grid;
+    flex-grow: 1;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.artist-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+    color: #333;
+}
+
+.artist-card img {
+    width: 100%;
     height: auto;
-    border-radius: 5px;
+    border-radius: 8px 8px 0 0;
 }
 
-.card h2 {
+.artist-card h2 {
     font-size: 1.5em;
     margin-bottom: 10px;
 }
 
-.card a {
-    margin: 5px;
-    display: inline-block;
+.artist-card p {
+    margin: 10px 0;
+}
+
+.artist-links, .btn {
+    margin-top: 10px;
+    display: block;
+    /* margin-top: 10px; */
+    padding: 10px;
+    background-color: #007BFF;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+/* Footer Styles */
+.footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    margin-top: auto;
 }
