@@ -5,9 +5,7 @@ nav {
     margin: 20px 0;
     text-align: center;
 }
-body {
-    font-family: Arial, sans-serif;
-}
+
 
 ul {
     list-style-type: none;
@@ -109,6 +107,45 @@ h1 {
     color: white;
 }
 
+
+/* Style the form container to center it */
+form {
+    display: flex;
+    /*flex-direction: column;*/
+    align-items: center;
+    justify-content: center;
+     
+}
+
+/* Style the input field */
+input[type="text"] {
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 300px; /* Adjust width as needed */
+    margin-right: 10px;
+    height: 42px; /* Set the same height as the input field */
+    box-sizing: border-box; /* Ensure padding doesn't affect total width/height */
+}
+
+/* Style the button */
+button {
+    
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff; /* Initial button color */
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    height: 42px; /* Set the same height as the input field */
+    box-sizing: border-box; /* Ensure padding doesn't affect total width/height */
+}
+
+/* Change button color on hover */
+button:hover {
+    background-color: #28a745; /* Green color on hover */
+}
 
 
 
