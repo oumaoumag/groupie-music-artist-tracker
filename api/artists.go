@@ -25,6 +25,7 @@ type Handler struct {
 	RenderTemplate func(w http.ResponseWriter, tmpl string, data interface{})
 }
 
+// ArtistsHandler is an HTTP handler for serving artist data
 func (h *Handler) ArtistsHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
