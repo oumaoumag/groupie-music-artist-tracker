@@ -2,7 +2,7 @@
 body {
     font-family: Arial, sans-serif;
     background-color: black;
-    
+
     color: #fff;
     display: flex;
     flex-direction: column;
@@ -141,7 +141,11 @@ footer {
  /* Global Styles */
 body {
     font-family: Arial, sans-serif;
-    background-color: black;
+    /* background-color: black; */
+    background-image: url('/static/background.png');
+    background-size: contain;
+    background-position: center;
+    background-attachment: fixed; /* keeps the background image fixed when scrolling*/
     color: #fff;
     display: flex;
     flex-direction: column;
@@ -152,6 +156,8 @@ body {
 h1 {
     text-align: center;
     padding: 20px 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    margin: 0;
 }
 
 nav {
@@ -171,6 +177,25 @@ nav a {
 nav a:hover {
     color: #007BFF;
 }
+
+
+nav ul {
+    list-style-type: none; /* removes default list styling */
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline; /* Align list items horizontally */
+}
+
+nav ul li a {
+    padding: 14px 20px; /* Padding for links */
+    text-decoration: none; /* remove underline */
+    color: #fff; /* Text color */
+}
+
+
 .artists-grid {
     display: grid;
     flex-grow: 1;
@@ -206,7 +231,7 @@ nav a:hover {
 .artist-links, .btn {
     margin-top: 10px;
     display: block;
-    margin-top: 10px;
+    /* margin-top: 10px; */
     padding: 10px;
     background-color: #007BFF;
     color: #fff;
@@ -220,7 +245,7 @@ nav a:hover {
 }
 
 /* Footer Styles */
-footer {
+.footer {
     background-color: #333;
     color: #fff;
     text-align: center;
