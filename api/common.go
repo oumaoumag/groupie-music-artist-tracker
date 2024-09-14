@@ -6,7 +6,7 @@ import (
 	"html/template"
 	"net/http"
 )
-
+// FetchData: Fetches data from a URL and decodes it into the target
 func FetchData(url string, target interface{}) (interface{}, error) {
 	resp, err := http.Get(url)
 	if err != nil {
@@ -23,6 +23,7 @@ func FetchData(url string, target interface{}) (interface{}, error) {
 	return target, nil
 }
 
+// RenderTemplate: Parses and executes a template file
 func RenderTemplate(w http.ResponseWriter, tmpl string, data interface{}) {
 	t, err := template.ParseFiles("templates/" + tmpl)
 	if err != nil {
