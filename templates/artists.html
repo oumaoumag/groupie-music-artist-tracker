@@ -14,19 +14,17 @@
     </form>
     <div class="artists-grid">
         {{range .}}
-        <div class="artist-card">
-            <img src="{{.Image}}" alt="{{.Name}}">
+        <li>
             <h2>{{.Name}}</h2>
-            <p><strong>Creation Date:</strong> {{.CreationDate}}</p>
-            <p><strong>First Album:</strong> {{.FirstAlbum}}</p>
-            <p><strong>Members:</strong> {{range .Members}}{{.}}, {{end}}</p>
-            <div class="artist-links">
-                <a href="{{.Locations}}" class="btn">Locations</a>
-                <a href="{{.ConcertDates}}" class="btn">Concert Dates</a>
-                <a href="{{.Relations}}" class="btn">Relations</a>
-            </div>
-        </div>
+            <img src="{{.Image}}" alt="{{.Name}}" style="width:200px;">
+            <strong>Creation Date:</strong> {{.CreationDate}}<br>
+            <strong>First Album:</strong> {{.FirstAlbum}}<br>
+            <strong>Members:</strong> {{range .Members}}{{.}}, {{end}}<br>
+            <a href="{{.Locations}}">Locations</a> |
+            <a href="{{.ConcertDates}}">Concert Dates</a> |
+            <a href="{{.Relations}}">Relations</a>
+        </li>
         {{end}}
-    </div>
+    </ul>
 </body>
 </html>
