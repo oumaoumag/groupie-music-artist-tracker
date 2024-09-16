@@ -17,5 +17,5 @@ func RenderErrorPage(w http.ResponseWriter, code int, message, description strin
         Message:     message,
         Description: description,
     }
-    renderTemplate(w, "error.html", data)
+    RenderTemplate(w, "error.html", data)
 }
