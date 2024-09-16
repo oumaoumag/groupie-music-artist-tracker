@@ -39,16 +39,16 @@ func homepageHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 
-	handler := &api.Handler{
-		FetchData:      api.FetchData,
-		RenderTemplate: api.RenderTemplate,
+	 handler := &api.Handler{
+	 	FetchData:      api.FetchData,
+ 	RenderTemplate: api.RenderTemplate,
 	}
 
 	http.HandleFunc("/", homepageHandler)
 	http.HandleFunc("/artists", handler.ArtistsHandler)
-	// http.HandleFunc("/dates", handler.DatesHandler)
-	// http.HandleFunc("/locations", handler.LocationsHandler)
-	// http.HandleFunc("/relations", handler.RelationsHandler)
+    http.HandleFunc("/dates", api.DatesHandler)
+	http.HandleFunc("/locations", api.LocationsHandler)
+	http.HandleFunc("/relations", api.RelationsHandler)
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	log.Println("Server running on http://localhost:8080")
