@@ -15,17 +15,17 @@ type LocationsAPIResponse struct {
 	Index []Location `json:"index"`
 }
 
-func LocationsHandler(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) LocationsHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
 	url := "https://groupietrackers.herokuapp.com/api/locations"
-	data, err := FetchData(url, &LocationsAPIResponse{})
+	data, err := h.FetchData(url, &LocationsAPIResponse{})
 	if err != nil {
-		http.Error(w, "Internal Server Errror", http.StatusInternalServerError)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-	RenderTemplate(w, "locations.html", data)
+	h.RenderTemplate(w, "locations.html", data)
 }

@@ -4,17 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Artists Information</title>
-    <link rel="stylesheet" type="text/css" href="/static/style.css"> <!-- Link to external CSS -->
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
 </head>
 <body>
     <h1>Artists Information</h1>
+    <nav>
+        <ul>
+            <li><a href="/homepage">Home</a></li>
+            <!-- <li><a href="/artists">Artists</a></li> -->
+            <li><a href="/dates">Dates</a></li>
+            <li><a href="/locations">Locations</a></li>
+            <li><a href="/relations">Relations</a></li>
+        </ul>
+    </nav>
     <form method="GET" action="/artists">
         <input type="text" name="search" placeholder="Search artists...">
         <button type="submit">Search</button>
     </form>
     <div class="artists-grid">
         {{range .}}
-        <div class="card">
+        <div class="artist-card">
             <h2>{{.Name}}</h2>
             <img src="{{.Image}}" alt="{{.Name}}">
             <p><strong>Creation Date:</strong> {{.CreationDate}}</p>

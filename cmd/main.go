@@ -37,8 +37,8 @@ func main() {
 	http.HandleFunc("/", homepageHandler)
 	http.HandleFunc("/artists", handler.ArtistsHandler)
 	//http.HandleFunc("/dates", handler.DatesHandler)
-	// http.HandleFunc("/locations", handler.LocationsHandler)
-	// http.HandleFunc("/relations", handler.RelationsHandler)
+	http.HandleFunc("/locations", handler.LocationsHandler)
+	http.HandleFunc("/relations", handler.RelationsHandler)
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	log.Println("Server running on http://localhost:8080")
