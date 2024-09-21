@@ -1,25 +1,46 @@
 package main
 
 import (
-    "log"
-    "net/http"
-     "groupie-tracker/api"
+	"groupie-tracker/api"
+	"log"
+	"net/http"
+	"text/template"
 )
 
-func main() {
+// homepageHandler: handles requests to the homepagae of the website
+func homepageHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+		return
+	}
 
-     // Route for the welcome page
-     http.HandleFunc("/", api.PageHandler)
-    
-     // Routes for the individual sections
-     http.HandleFunc("/artists", api.PageHandler)
-     http.HandleFunc("/locations", api.PageHandler)
-     http.HandleFunc("/dates", api.PageHandler)
-     http.HandleFunc("/relations", api.PageHandler)
- 
-               // Handle root route
-    http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static")))) // Serve static files (CSS)
-    
-    log.Println("Server running on http://localhost:8080")
-    log.Fatal(http.ListenAndServe(":8080", nil))
+	// Parse the template file
+	t, err := template.ParseFiles("templates/homepage.html")
+	if err != nil {
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	// Execute the template with no data
+	if err := t.Execute(w, nil); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}
+
+func main() {
+	// A new Handler instance, passing in the FetchData and RenderTemplate functions from the api package
+	handler := &api.Handler{
+		FetchData:      api.FetchData,
+		RenderTemplate: api.RenderTemplate,
+	}
+
+	http.HandleFunc("/", homepageHandler)
+	http.HandleFunc("/artists", handler.ArtistsHandler)
+	//http.HandleFunc("/dates", handler.DatesHandler)
+	http.HandleFunc("/locations", handler.LocationsHandler)
+	http.HandleFunc("/relations", handler.RelationsHandler)
+
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
+	log.Println("Server running on http://localhost:8080")
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }

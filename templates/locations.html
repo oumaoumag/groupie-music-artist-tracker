@@ -3,40 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Locations</title>
-    <link rel="stylesheet" href="/static/styles.css">
+    <title>Tour Locations</title>
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
 </head>
 <body>
-    <header>
-        <h1>Locations</h1>
-    </header>
-    <div class="container">
-        <section id="locations">
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Venue</th>
-                            <th>City</th>
-                            <th>Country</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{with index .	"https://groupietrackers.herokuapp.com/api/locations/"}}
-                        {{range .}}
-                        <tr>
-                            <td>{{.Locations}}</td>
-                            <td>{{.City}}</td>
-                            <td>{{.Country}}</td>
-                        </tr>
-                        {{end}}
-                        {{else}}
-                        <tr><td colspan="3">No locations data available.</td></tr>
-                        {{end}}
-                    </tbody>
-                </table>
-            </div>
-        </section>
-    </div>
+    <h1>Tour Locations</h1>
+    <table class="tour-table">
+        <thead>
+            <tr>
+                <th>Tour ID</th>
+                <th>Locations</th>
+            </tr>
+        </thead>
+        <tbody>
+        {{range .Index}}
+        <tr>
+            <td>{{.ID}}</td>
+            <td>
+                <ul>
+                    {{range .Locations}}
+                    <li>{{.}}</li>
+                    {{end}}
+                </ul>
+            </td>
+        </tr>
+        {{end}}
+        </tbody>
+    </table>
 </body>
 </html>

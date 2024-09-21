@@ -3,31 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dates</title>
-    <link rel="stylesheet" href="/static/styles.css">
+    <title>Tour Dates Information</title>
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
 </head>
 <body>
-    <header>
-        <h1>Dates</h1>
-    </header>
-    <div class="container">
-        <section id="dates">
-            <ul class="list">
-                {{with index . 	"https://groupietrackers.herokuapp.com/api/dates"}}
-                {{range .}}
-                <li class="list-item">
-                    <p><strong>Dates:</strong></p>
-                    <ul>
-                        {{range .Dates}}
-                        <li>{{.}}</li>
-                        {{end}}
-                    </ul>
-                {{end}}
-                {{else}}
-                <li class="list-item">No dates data available.</li>
-                {{end}}
-            </ul>
-        </section>
-    </div>
+    <h1>Tour Dates Information</h1>
+    <table class="tour-table">
+        <thead>
+            <tr>
+                <th>Tour ID</th>
+                <th>Dates</th>
+            </tr>
+        </thead>
+        <tbody>
+        {{range .Index}}
+        <tr>
+            <td>{{.ID}}</td>
+            <td>
+                <ul>
+                    {{range .Dates}}
+                    <li>{{.}}</li>
+                    {{end}}
+                </ul>
+            </td>
+        </tr>
+        {{end}}
+        </tbody>
+    </table>
 </body>
 </html>

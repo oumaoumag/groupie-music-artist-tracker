@@ -3,29 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Relations</title>
-    <link rel="stylesheet" href="/static/styles.css">
+    <title>Tour Dates and Locations Information</title>
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
 </head>
 <body>
-    <header>
-        <h1>Relations</h1>
-    </header>
-    <div class="container">
-        <section id="relations">
-            <ul class="list">
-                {{with index . 	"https://groupietrackers.herokuapp.com/api/relation"}}
-                {{range .}}
-                <li class="list-item">
-                    <p><strong>Artist ID:</strong> {{.ArtistID}}</p>
-                    <p><strong>Date ID:</strong> {{.DateID}}</p>
-                    <p><strong>Location ID:</strong> {{.LocationID}}</p>
+    <h1>Tour Dates and Locations Information</h1>
+    <div class="tour-grid">
+        {{range .Index}}
+        <div class="tour-card">
+            <h2>Tour ID: {{.ID}}</h2>
+            <ul>
+                {{range $location, $dates := .DatesLocations}}
+                <li>{{ $location }}
+                    <ul>
+                        {{range $dates}}
+                        <li>{{.}}</li>
+                        {{end}}
+                    </ul>
                 </li>
                 {{end}}
-                {{else}}
-                <li class="list-item">No relations data available.</li>
-                {{end}}
             </ul>
-        </section>
+        </div>
+        {{end}}
     </div>
 </body>
 </html>

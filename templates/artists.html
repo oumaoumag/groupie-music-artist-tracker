@@ -3,31 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Artists</title>
-    <link rel="stylesheet" href="/static/styles.css">
+    <title>Artists Information</title>
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
 </head>
 <body>
-    <header>
-        <h1>Artists</h1>
-    </header>
-    <div class="container">
-        <section id="artists">
-            {{with index . "https://groupietrackers.herokuapp.com/api/artists"}}
-            {{range .}}
-            <div class="card">
-                <img src="{{.Image}}" alt="{{.Name}}" width="100">
-                <div>
-                    <h3>{{.Name}}</h3>
-                    <p><strong>Year Started:</strong> {{.Year}}</p>
-                    <p><strong>First Album:</strong> {{.FirstAlbum}}</p>
-                    <p><strong>Members:</strong> {{range .Members}}{{.}} {{end}}</p>
-                </div>
-            </div>
-            {{end}}
-            {{else}}
-            <p>No artists data available.</p>
-            {{end}}
-        </section>
+    <h1>Artists Information</h1>
+    <nav>
+        <ul>
+            <li><a href="/homepage">Home</a></li>
+            <!-- <li><a href="/artists">Artists</a></li> -->
+            <li><a href="/dates">Dates</a></li>
+            <li><a href="/locations">Locations</a></li>
+            <li><a href="/relations">Relations</a></li>
+        </ul>
+    </nav>
+    <form method="GET" action="/artists">
+        <input type="text" name="search" placeholder="Search artists...">
+        <button type="submit">Search</button>
+    </form>
+    <div class="artists-grid">
+        {{range .}}
+        <div class="artist-card">
+            <h2>{{.Name}}</h2>
+            <img src="{{.Image}}" alt="{{.Name}}">
+            <p><strong>Creation Date:</strong> {{.CreationDate}}</p>
+            <p><strong>First Album:</strong> {{.FirstAlbum}}</p>
+            <p><strong>Members:</strong> {{range .Members}}{{.}}, {{end}}</p>
+            <a href="{{.Locations}}">Locations</a> |
+            <a href="{{.ConcertDates}}">Concert Dates</a> |
+            <a href="{{.Relations}}">Relations</a>
+        </div>
+        {{end}}
     </div>
 </body>
 </html>
