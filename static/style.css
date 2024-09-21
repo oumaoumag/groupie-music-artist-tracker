@@ -21,7 +21,16 @@ body {
     background-color: rgba(0, 0, 0, 0.5); /* Adds semi-transparent background */
 }
 
-h1, h2, h3 {
+h1 {
+    text-align: center;
+    padding: 20px 0;
+    /* background-color: rgba(0, 0, 0, 0.5); Adds semi-transparent background */
+    margin: 0;
+    line-height: 1.2;
+
+}
+
+h2, h3 {
     text-align: center;
     padding: 20px 0;
     background-color: rgba(0, 0, 0, 0.5); /* Adds semi-transparent background */
