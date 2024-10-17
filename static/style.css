@@ -35,8 +35,8 @@ h1, h2, h3 {
 
 /* Navigation Styles */
 nav {
-    background-color: #333;
-    color: #fff;
+    background-color: rgba(0, 0, 0, 0.5);
+     color: #fff;
     padding: 10px 0;
     text-align: center;
 }
@@ -64,23 +64,34 @@ nav ul li a:hover {
 
 /* Artists grid */
 .artists-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 0.5fr));
-    gap: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+
+    /* grid-template-columns: repeat(auto-fill, minmax(150px, 0.5fr)); */
+    /* gap: 10px; */
     padding: 10px;
 }
 
 .artist-card {
     background-color: rgba(0, 0, 0, 0.5);
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    width: 200px;
+    margin: 5px;
     text-align: center;
+    transition: transform 0.3s;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    /* padding: 20px; */
+    /* text-align: center; */
+    font-size: 1em;
     color: #fff;
 }
 
 .artist-card img {
-    width: 40%;
+    width: 100%;
     height: auto;
     border-radius: 8px 8px 0 0;
 }
@@ -102,7 +113,7 @@ nav ul li a:hover {
 
 /* Footer Styles */
 .footer {
-    background-color: #333;
+    background-color: rgba(0, 0, 0, 0.5);
     color: #fff;
     text-align: center;
     padding: 10px;
