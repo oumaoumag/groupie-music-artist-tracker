@@ -1,10 +1,14 @@
 /* Global Styles */
-body {
-    font-family: Arial, sans-serif;
+body.homepage {
     background-image: url('/static/b3.jpeg');
     background-size: contain;
     background-position: center;
     background-attachment: fixed;
+}
+
+body{
+    background: linear-gradient(to bottom right, #3E00B3, #190087);
+    font-family: Arial, sans-serif;
     color: #fff;
     display: flex;
     flex-direction: column;
@@ -14,30 +18,22 @@ body {
     line-height: 1.8;
 }
 
+
 .text-content {
-    max-width: 750px; /* Limit text width for readability */
-    margin: 0 auto; /* Center the text block */
-    padding: 20px; /* Padding around the text block */
-    background-color: rgba(0, 0, 0, 0.5); /* Adds semi-transparent background */
+    max-width: 750px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
-h1 {
+h1, h2, h3 {
     text-align: center;
     padding: 20px 0;
-    /* background-color: rgba(0, 0, 0, 0.5); Adds semi-transparent background */
-    margin: 0;
-    line-height: 1.2;
-
-}
-
-h2, h3 {
-    text-align: center;
-    padding: 20px 0;
-    background-color: rgba(0, 0, 0, 0.5); /* Adds semi-transparent background */
     margin: 0;
     line-height: 1.2;
 }
 
+/* Navigation Styles */
 nav {
     background-color: #333;
     color: #fff;
@@ -62,22 +58,20 @@ nav ul li a {
     font-weight: bold;
 }
 
-nav a:hover {
+nav ul li a:hover {
     color: #007BFF;
 }
 
-
+/* Artists grid */
 .artists-grid {
     display: grid;
-    flex-grow: 1;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
-    padding: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 0.5fr));
+    gap: 10px;
+    padding: 10px;
 }
 
 .artist-card {
-    /* background-color: #fff; */
-    background-color: rgba(0, 0, 0, 0.5); /* Adds semi-transparent background */
+    background-color: rgba(0, 0, 0, 0.5);
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
@@ -86,7 +80,7 @@ nav a:hover {
 }
 
 .artist-card img {
-    width: 100%;
+    width: 40%;
     height: auto;
     border-radius: 8px 8px 0 0;
 }
@@ -102,7 +96,7 @@ nav a:hover {
     text-align: center;
 }
 
-.btn:hover {
+.artist-links:hover, .btn:hover {
     background-color: #0056b3;
 }
 
