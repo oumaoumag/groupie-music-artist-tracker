@@ -1,13 +1,7 @@
 /* Global Styles */
-body.homepage {
-    background-image: url('/static/b3.jpeg');
-    background-size: contain;
-    background-position: center;
-    background-attachment: fixed;
-}
 
 body{
-    background: linear-gradient(to bottom right, #3E00B3, #190087);
+    background: linear-gradient(to bottom right, #07050a, #190087);
     font-family: Arial, sans-serif;
     color: #fff;
     display: flex;
@@ -16,6 +10,13 @@ body{
     margin: 0;
     font-size: 1.2rem;
     line-height: 1.8;
+}
+
+.welcome-section {
+    background-image: url('/static/b3.jpeg');
+    background-size: contain;
+    background-position: center;
+    background-attachment: fixed;
 }
 
 
@@ -79,8 +80,9 @@ nav ul li a:hover {
     align-items: center;
     border: 1px solid #ccc;
     border-radius: 10px;
-    width: 200px;
-    margin: 5px;
+    width: 400px;
+    margin-bottom: 10px;
+    margin-left: 10px;
     text-align: center;
     transition: transform 0.3s;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
