@@ -35,7 +35,7 @@ func main() {
 	}
 
 	http.HandleFunc("/", homepageHandler)
-	http.HandleFunc("/artists", handler.ArtistsHandler)
+	http.HandleFunc("/artist", handler.ArtistsHandler)
 	//http.HandleFunc("/dates", handler.DatesHandler)
 	http.HandleFunc("/locations", handler.LocationsHandler)
 	http.HandleFunc("/relations", handler.RelationsHandler)
