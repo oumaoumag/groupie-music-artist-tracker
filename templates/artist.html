@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artists Information</title>
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+</head>
+<body>
+    <h1>Artist Information</h1>
+    <nav>
+        <ul>
+            <li><a href="/homepage">Home</a></li>
+            <!-- <li><a href="/artists">Artists</a></li> -->
+        </ul>
+    </nav>
+           <div class="artist-card">
+            <h2>{{.Name}}</h2>
+            <img src="{{.Image}}" alt="{{.Name}}">
+            <p><strong>Creation Date:</strong> {{.CreationDate}}</p>
+            <p><strong>First Album:</strong> {{.FirstAlbum}}</p>
+            <p><strong>Members:</strong> {{range .Members}}{{.}}, {{end}}</p>
+            <p><strong>Locations:</strong>"{{.Locations}}"</p> 
+            <p><strong>Concert Dates:</strong>"{{.ConcertDates}}"</p>
+            <P><strong>Relations:"{{.Relations}}"</P>
+        </div>
+    <footer class="footer">
+        <p>&copy; 2024 Groupie-Tracker. All rights reserved.</p>
+    </footer>
+</body>
+</html>
