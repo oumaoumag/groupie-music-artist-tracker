@@ -8,7 +8,7 @@ body{
     flex-direction: column;
     min-height: 100vh;
     margin: 0;
-    font-size: 1.2rem;
+    font-size: 2.0rem;
     line-height: 1.8;
 }
 
@@ -17,11 +17,14 @@ body{
     background-size: contain;
     background-position: center;
     background-attachment: fixed;
+    width: auto;
 }
 
 
 .text-content {
-    max-width: 750px;
+    max-width: 1050px;
+    text-size-adjust: auto;
+    text-align:center;
     margin: 0 auto;
     padding: 20px;
     background-color: rgba(0, 0, 0, 0.5);
@@ -86,8 +89,6 @@ nav ul li a:hover {
     text-align: center;
     transition: transform 0.3s;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    /* padding: 20px; */
-    /* text-align: center; */
     font-size: 1em;
     color: #fff;
 }

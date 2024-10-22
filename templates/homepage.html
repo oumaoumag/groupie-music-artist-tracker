@@ -7,28 +7,38 @@
     <link rel="stylesheet" type="text/css" href="/static/style.css">
 </head>
 <body>
-    <section class="welcome-section">
     <header class="header">
-    </header>
     <h1>Groupie Tracker</h1>
     <nav>
         <ul>
             <!-- <li><a href="/homepage">Home</a></li> -->
             <li><a href="/artists">Artists</a></li>
-            <li><a href="/dates">Dates</a></li>
-            <li><a href="/locations">Locations</a></li>
-            <li><a href="/relations">Relations</a></li>
         </ul>
     </nav>
-
-    <div class="text-content">
-        <h2>Welcome to Your Music Industry Homepage</h2>
-        <p>Explore information about your favorite artists, where they performed, and more!</p>
-        <button>View Artists</button>
+    </header>
+    
+    <section class="welcome-section">
+        <div class="text-content">
+            <h2>Welcome to Your Music Industry Homepage</h2>
+            <p>Explore information about your favorite artists, where they performed, and more!</p>
     </div>
     </section>
+    
     <section>
-        // Artists go here
+        <form method="GET" action="/artists">
+            <input type="text" name="search" placeholder="Search artists...">
+            <button type="submit">Search</button>
+        </form>
+        <div class="artists-grid">
+            {{range .}}
+        <a>
+            <div class="artist-card">
+                <h2>{{.Name}}</h2>
+                <img src="{{.Image}}" alt="{{.Name}}">
+            </div>
+            {{end}}
+        </div>
+    </a>
     </section>
 
     <footer class="footer">
