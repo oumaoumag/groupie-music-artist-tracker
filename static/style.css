@@ -1,6 +1,5 @@
 /* Global Styles */
-
-body{
+body {
     background: linear-gradient(to bottom right, #07050a, #190087);
     font-family: Arial, sans-serif;
     color: #fff;
@@ -20,11 +19,10 @@ body{
     width: auto;
 }
 
-
 .text-content {
     max-width: 1050px;
-    text-size-adjust: auto;
-    text-align:center;
+    text-size-adjust: 100%;
+    text-align: center;
     margin: 0 auto;
     padding: 20px;
     background-color: rgba(0, 0, 0, 0.5);
@@ -40,7 +38,7 @@ h1, h2, h3 {
 /* Navigation Styles */
 nav {
     background-color: rgba(0, 0, 0, 0.5);
-     color: #fff;
+    color: #fff;
     padding: 10px 0;
     text-align: center;
 }
@@ -66,14 +64,11 @@ nav ul li a:hover {
     color: #007BFF;
 }
 
-/* Artists grid */
+/* Artists Grid */
 .artists-grid {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
-
-    /* grid-template-columns: repeat(auto-fill, minmax(150px, 0.5fr)); */
-    /* gap: 10px; */
     padding: 10px;
 }
 
@@ -99,7 +94,9 @@ nav ul li a:hover {
     border-radius: 8px 8px 0 0;
 }
 
-.artist-links, .btn {
+/* Button and Link Styles */
+.artist-links,
+.btn {
     margin-top: 10px;
     display: block;
     padding: 10px;
@@ -110,8 +107,18 @@ nav ul li a:hover {
     text-align: center;
 }
 
-.artist-links:hover, .btn:hover {
+.artist-links:hover,
+.btn:hover {
     background-color: #0056b3;
+}
+
+.artist-card.link {
+    color: inherit; /* Keeps text color the same as parent */
+    text-decoration: none; /* Removes underline */
+}
+
+.artist-card.link:hover {
+    transform: scale(1.05); /* Slightly enlarges on hover */
 }
 
 /* Footer Styles */
@@ -119,12 +126,16 @@ nav ul li a:hover {
     background-color: rgba(0, 0, 0, 0.5);
     color: #fff;
     text-align: center;
-    padding: 10px;
+    padding: 20px; /* Adds more space in the footer */
     margin-top: auto;
 }
 
 /* Responsive Styles */
 @media (max-width: 768px) {
+    .artists-grid {
+        flex-direction: column; /* Stacks artist cards vertically */
+        align-items: center; /* Centers the cards */
+    }
     body {
         font-size: 0.9rem;
     }
