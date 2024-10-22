@@ -21,10 +21,10 @@ func PageHandler(w http.ResponseWriter, r *http.Request) {
 
     switch r.URL.Path {
     case "/":
-        tmpl = template.Must(template.ParseFiles("../templates/welcome.html"))
+        tmpl = template.Must(template.ParseFiles("../templates/homepage.html"))
         err = tmpl.Execute(w, nil) // No data needed for the welcome page
-    case "/artists":
-        tmpl = template.Must(template.ParseFiles("../templates/artists.html"))
+    case "/artist":
+        tmpl = template.Must(template.ParseFiles("../templates/artist.html"))
         err = tmpl.Execute(w, fetchedData)
     case "/locations":
         tmpl = template.Must(template.ParseFiles("../templates/locations.html"))
