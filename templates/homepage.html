@@ -12,7 +12,7 @@
     <nav>
         <ul>
             <!-- <li><a href="/homepage">Home</a></li> -->
-            <li><a href="/artists">Artists</a></li>
+            <li><a href="/">home</a></li>
         </ul>
     </nav>
     </header>
@@ -21,25 +21,25 @@
         <div class="text-content">
             <h2>Welcome to Your Music Industry Homepage</h2>
             <p>Explore information about your favorite artists, where they performed, and more!</p>
+            <form method="GET" action="/artist">
+                <input type="text" name="search" placeholder="Search artists...">
+                <button type="submit">Search</button>
+            </form>
     </div>
-    </section>
-    
+
     <section>
-        <form method="GET" action="/artists">
-            <input type="text" name="search" placeholder="Search artists...">
-            <button type="submit">Search</button>
-        </form>
         <div class="artists-grid">
             {{range .}}
-        <a>
+        <a href="/artist?id={{.ID}}" class="artist-card link">
             <div class="artist-card">
                 <h2>{{.Name}}</h2>
                 <img src="{{.Image}}" alt="{{.Name}}">
             </div>
+        </a>
             {{end}}
         </div>
-    </a>
     </section>
+</section>
 
     <footer class="footer">
         <p>&copy; 2024 Groupie-Tracker. All rights reserved.</p>

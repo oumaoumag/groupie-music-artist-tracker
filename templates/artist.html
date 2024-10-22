@@ -7,14 +7,17 @@
     <link rel="stylesheet" type="text/css" href="/static/style.css">
 </head>
 <body>
-    <h1>Artist Information</h1>
-    <nav>
-        <ul>
-            <li><a href="/homepage">Home</a></li>
-            <!-- <li><a href="/artists">Artists</a></li> -->
-        </ul>
-    </nav>
-           <div class="artist-card">
+    <header class="header">
+        <h1>{{.Name}}</h1>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="artist-details">
+        <div class="artist-card">
             <h2>{{.Name}}</h2>
             <img src="{{.Image}}" alt="{{.Name}}">
             <p><strong>Creation Date:</strong> {{.CreationDate}}</p>
@@ -23,7 +26,10 @@
             <p><strong>Locations:</strong>"{{.Locations}}"</p> 
             <p><strong>Concert Dates:</strong>"{{.ConcertDates}}"</p>
             <P><strong>Relations:"{{.Relations}}"</P>
-        </div>
+            <a href="/"><button>Back to Artists</button></a>
+     </div>
+    </section>
+
     <footer class="footer">
         <p>&copy; 2024 Groupie-Tracker. All rights reserved.</p>
     </footer>
