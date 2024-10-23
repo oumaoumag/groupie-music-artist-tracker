@@ -1,8 +1,8 @@
 package api
 
-import (	
-	"strconv"
+import (
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -24,51 +24,56 @@ type Handler struct {
 	RenderTemplate func(w http.ResponseWriter, tmpl string, data interface{})
 }
 
-// ArtistsHandler is an HTTP handler for serving artist data
+// ArtistsHandler handles the request to fetch artist data or filter by search query
 func (h *Handler) ArtistsHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
-	// Get artist ID from thr URL path (if any)
+	// Get artist ID from the URL path (if any)
 	urlPath := strings.TrimPrefix(r.URL.Path, "/artist/")
-	artistID, err := strconv.Atoi(urlPath) // consvert to an interger if it is a number
+	artistID, err := strconv.Atoi(urlPath) // Convert to integer if a number
 
-	// URL to fetch all artists
+	// URL to fetch all artistss
 	url := "https://groupietrackers.herokuapp.com/api/artists"
 	data := []Artist{}
 
-
+	// Fetch artist data
 	if _, err := h.FetchData(url, &data); err != nil {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
-	// Check if we are fetching a specific artist by ID
+	// Check if we're fetching a specific artist by ID
 	if err == nil && artistID > 0 {
-		// Loop through the artist to find the one with the matching ID
+		// Find the artist with the matching ID
 		for _, artist := range data {
 			if artist.ID == artistID {
-				h.RenderTemplate(w, "artists.html", artist) // Render single artist template
+				h.RenderTemplate(w, "artist.html", artist) // Render single artist template
 				return
 			}
 		}
-		// iF artist not found, return a 404
+		// If artist not found, return a 404
 		http.Error(w, "Artist Not Found", http.StatusNotFound)
 		return
 	}
 
-	// If no specific artist is required, display the homepage with all artists
+	filtered := []Artist{}
+
+	// Handle search queries
 	searchQuery := r.URL.Query().Get("search")
 	if searchQuery != "" {
-		filtered := []Artist{}
 		for _, artist := range data {
 			if strings.Contains(strings.ToLower(artist.Name), strings.ToLower(searchQuery)) {
+				filtered = append(filtered, artist)
+			} else {
 				filtered = append(filtered, artist)
 			}
 		}
 		data = filtered
 	}
-	h.RenderTemplate(w, "homepage.html", data) // Render homeage with all artists
+
+	// Render the homepage with all artists (or filtered results)
+	// h.RenderTemplate(w, "homepage.html", data)
 }
