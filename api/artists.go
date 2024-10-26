@@ -32,7 +32,7 @@ func (h *Handler) ArtistsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Get artist ID from the URL path (if any)
-	urlPath := strings.TrimPrefix(r.URL.Path, "/artist/")
+	urlPath := strings.TrimPrefix(r.URL.Path, "/artists/")
 	artistID, err := strconv.Atoi(urlPath) // Convert to integer if a number
 
 	// URL to fetch all artistss
@@ -67,8 +67,6 @@ func (h *Handler) ArtistsHandler(w http.ResponseWriter, r *http.Request) {
 		for _, artist := range data {
 			if strings.Contains(strings.ToLower(artist.Name), strings.ToLower(searchQuery)) {
 				filtered = append(filtered, artist)
-			} else {
-				filtered = append(filtered, artist)
 			}
 		}
 		data = filtered
@@ -84,13 +82,6 @@ func (h *Handler) HomepageHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return
 	}
-
-	// // Parse the template file
-	// t, err := template.ParseFiles("templates/homepage.html")
-	// if err != nil {
-	// 	http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-	// 	return
-	// }
 
 	// URL to fetch all artistss
 	url := "https://groupietrackers.herokuapp.com/api/artists"
