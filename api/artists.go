@@ -77,3 +77,31 @@ func (h *Handler) ArtistsHandler(w http.ResponseWriter, r *http.Request) {
 	// Render the homepage with all artists (or filtered results)
 	h.RenderTemplate(w, "homepage.html", data)
 }
+
+// homepageHandler: handles requests to the homepagae of the website
+func (h *Handler) HomepageHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	// // Parse the template file
+	// t, err := template.ParseFiles("templates/homepage.html")
+	// if err != nil {
+	// 	http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	// 	return
+	// }
+
+	// URL to fetch all artistss
+	url := "https://groupietrackers.herokuapp.com/api/artists"
+	data := []Artist{}
+
+	// Fetch artist data
+	if _, err := h.FetchData(url, &data); err != nil {
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	// Render the homepage with all artists (or filtered results)
+	h.RenderTemplate(w, "homepage.html", data)
+}
