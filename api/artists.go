@@ -75,5 +75,5 @@ func (h *Handler) ArtistsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Render the homepage with all artists (or filtered results)
-	// h.RenderTemplate(w, "homepage.html", data)
+	h.RenderTemplate(w, "homepage.html", data)
 }
