@@ -31,7 +31,7 @@
     <section>
         <div class="artists-grid">
             {{range .}}
-        <a href="/artist?id={{.ID}}" class="artist-card link">
+        <a href="/artist/{{.ID}}" class="artist-card link">
             <div class="artist-card">
                 <h2>{{.Name}}</h2>
                 <img src="{{.Image}}" alt="{{.Name}}">
