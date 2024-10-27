@@ -17,17 +17,45 @@
     </header>
 
     <section class="artist-details">
+        <h2>{{.Name}}</h2>
         <div class="artist-card">
-            <h2>{{.Name}}</h2>
             <img src="{{.Image}}" alt="{{.Name}}">
             <p><strong>Creation Date:</strong> {{.CreationDate}}</p>
             <p><strong>First Album:</strong> {{.FirstAlbum}}</p>
             <p><strong>Members:</strong> {{range .Members}}{{.}}, {{end}}</p>
-            <p><strong>Locations:</strong>"{{.Locations}}"</p> 
-            <p><strong>Concert Dates:</strong>"{{.ConcertDates}}"</p>
-            <P><strong>Relations:"{{.Relations}}"</P>
-            <a href="/"><button>Back to Artists</button></a>
-     </div>
+            <a href="/artist/{{.ID}}/relations" class="artist-relations link"><p><strong>Tour Dates and Locations</strong></p></a>
+        </div>
+
+        <section class="concert-table">
+            <h2>Concert Schedule</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Locations</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{range $date, $locations := .DatesLocations}}
+                    <tr>
+                        <td>{{ $date }}</td>
+                        <td>
+                            {{range $locations}}
+                            {{.}}<br>
+                            {{end}}
+                        </td>
+                    </tr>
+                    {{end}}
+                </tbody>
+            </table>
+        </section>
+
+        <p><strong>Relations:</strong> {{.Relations}}</p>
+        <p><strong>Locations:</strong> {{.Locations}}</p>
+        <p><strong>Concert Dates:</strong> {{.ConcertDates}}</p>
+    </div>
+
+    <a href="/"><button>Back to Artists</button></a>
     </section>
 
     <footer class="footer">

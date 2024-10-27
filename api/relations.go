@@ -1,9 +1,9 @@
 package api
 
 import (
-	// "encoding/json"
-	// "html/template"
 	"net/http"
+	"strconv"
+	"strings"
 )
 
 type DatesLocations struct {
@@ -21,11 +21,50 @@ func (h *Handler) RelationsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Get and split the URL path
+	path := r.URL.Path
+	parts := strings.Split(path, "/")
+
+	// The artist ID is the third element in the path (e.g., "artist/1/relations")
+	if len(parts) < 3 {
+		http.Error(w, "Artist ID not found in URL", http.StatusBadRequest)
+		return
+	}
+
+	artistID, err := strconv.Atoi(parts[2])
+	if err != nil {
+		http.Error(w, "Invalid artist ID", http.StatusBadRequest)
+		return
+	}
+
 	url := "https://groupietrackers.herokuapp.com/api/relation"
 	data, err := h.FetchData(url, &DatesLocationsAPIResponse{})
 	if err != nil {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-	h.RenderTemplate(w, "relations.html", data)
+
+	// Type assertion to convert data to *DatesLocationsAPIResponse
+	apiResponse, ok := data.(*DatesLocationsAPIResponse)
+	if !ok {
+		http.Error(w, "Invalid data format", http.StatusInternalServerError)
+		return
+	}
+
+	// Filter data for the specific artist
+	var artistData DatesLocations
+	for _, artist := range apiResponse.Index {
+		if artist.ID == artistID {
+			artistData = artist
+			break
+		}
+	}
+
+	// If no artist data is found
+	if artistData.ID == 0 {
+		http.Error(w, "Artist not found", http.StatusNotFound)
+		return
+	}
+
+	h.RenderTemplate(w, "artist.html", artistData)
 }
