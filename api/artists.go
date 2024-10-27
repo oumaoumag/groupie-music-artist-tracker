@@ -52,10 +52,14 @@ func (h *Handler) ArtistsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Printf("Fetched artist data: %+v\n", data)
+	// log.Printf("Fetched artist data: %+v\n", data)
+	if err != nil {
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
 
 	// Check if we're fetching a specific artist by ID
-	if err == nil && artistID > 0 {
+	if  artistID > 0 {
 		for _, artist := range data {
 			if artist.ID == artistID {
 

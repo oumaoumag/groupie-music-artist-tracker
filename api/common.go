@@ -4,8 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"html/template"
+	"log"
 	"net/http"
 )
+
 // FetchData: Fetches data from a URL and decodes it into the target
 func FetchData(url string, target interface{}) (interface{}, error) {
 	resp, err := http.Get(url)
@@ -30,6 +32,8 @@ func RenderTemplate(w http.ResponseWriter, tmpl string, data interface{}) {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
+	log.Println("Rendering template:", tmpl)
+	
 	if err := t.Execute(w, data); err != nil {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
