@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artists Information</title>
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+</head>
+<body>
+    <h1>Artists Information</h1>
+    <form method="GET" action="/artists">
+        <input type="text" name="search" placeholder="Search artists...">
+        <button type="submit">Search</button>
+    </form>
+    <div class="artists-grid">
+        {{range .}}
+        <div class="artist-card">
+            <img src="{{.Image}}" alt="{{.Name}}">
+            <h2>{{.Name}}</h2>
+            <p><strong>Creation Date:</strong> {{.CreationDate}}</p>
+            <p><strong>First Album:</strong> {{.FirstAlbum}}</p>
+            <p><strong>Members:</strong> {{range .Members}}{{.}}, {{end}}</p>
+            <div class="artist-links">
+                <a href="{{.Locations}}" class="btn">Locations</a>
+                <a href="{{.ConcertDates}}" class="btn">Concert Dates</a>
+                <a href="{{.Relations}}" class="btn">Relations</a>
+            </div>
+        </div>
+        {{end}}
+    </div>
+</body>
+</html>
