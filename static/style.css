@@ -1,149 +1,24 @@
-/* 
+/* Global Styles */
 body {
     font-family: Arial, sans-serif;
-    background-color: black;
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    max-width: 0;
-}
-
-h1 {
-    text-align: center;
-    padding: 20px 0;
-}
-
-nav {
-    margin: 20px 0;
-    text-align: center;
-}
-
-ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-}
-
-li {
-    display: inline;
-    margin: 0 15px;
-}
-
-a {
-    text-decoration: none;
-    color: #007BFF;
-    font-weight: bold;
-}
-
-a:hover {
-    color: #0056b3;
-    text-decoration: underline;
-}
-
-.card {
-    border: 1px solid #ddd;
-    padding: 20px;
-    margin: 10px;
-    border-radius: 5px;
-    width: 300px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    background-color: #f9f9f9;
-}
-
-img {
-    max-width: 200px;
-    height: auto;
-    border-radius: 5px;
-}
-
-.artists-grid, .tour-grid {
-    display: grid;
-    flex-grow: 1;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
-    padding: 20px;
-}
-
-.artist-card, .tour-card {
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    text-align: center;
-}
-
-.artist-card img, .tour-card img {
-    width: 100%;
-    height: auto;
-    border-radius: 8px 8px 0 0;
-}
-
-.text-content {
-    max-width: 1050px;
-    text-size-adjust: 100%;
-    text-align: center;
-    margin: 0 auto;
-    border-collapse: collapse;
-}
-
-.tour-table th, .tour-table td {
-    border: 1px solid #ddd !important;
-    padding: 8px !important;
-}
-
-.tour-table tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-.tour-table tr:hover {
-    background-color: #ddd;
-}
-
-.tour-table th {
-    padding-top: 12px;
-    padding-bottom: 12px;
-    text-align: left;
-    background-color: #007BFF;
-    color: white;
-}
-
-
-.card h2 {
-    font-size: 1.5em;
-    margin-bottom: 10px;
-}
-.card a {
-    margin: 5px;
-    display: inline-block;
-}
-
-footer {
-    background-color: #333;
-    color: #fff;
-    text-align: center;
-    padding: 10px;
-    margin-top: auto;
-}
- */
-
- /* Global Styles */
-body {
-    font-family: Arial, sans-serif;
-    background-color: black;
+    background: linear-gradient(to bottom right, #07050a, #190087);
     color: #fff;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
     margin: 0;
+    font-size: 1.8rem;
+    line-height: 1.6;
 }
 
-h1 {
+h1, h2, h3 {
     text-align: center;
     padding: 20px 0;
+    margin: 0;
+    line-height: 1.2;
 }
 
+/* Navigation Styles */
 nav {
     background-color: #333;
     color: #fff;
@@ -151,19 +26,48 @@ nav {
     text-align: center;
 }
 
-nav a {
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin: 0 15px;
+}
+
+nav ul li a {
     color: #fff;
     text-decoration: none;
     font-weight: bold;
-    margin: 0 15px
+    padding: 14px 20px;
 }
 
 nav ul li a:hover {
     color: #007BFF;
 }
+
+/* Welcome Section */
+.welcome-section {
+    background-image: url('/static/b3.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    padding: 60px 0;
+}
+
+.text-content {
+    max-width: 1050px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.6);
+    text-align: center;
+}
+
+/* Artists Grid */
 .artists-grid {
     display: grid;
-    flex-grow: 1;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 20px;
     padding: 20px;
@@ -174,12 +78,14 @@ nav ul li a:hover {
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
+    width: 30%;
     text-align: center;
     color: #333;
+    transition: transform 0.3s;
 }
 
 .artist-card img {
-    width: 100%;
+    width: 50%;
     height: auto;
     border-radius: 8px 8px 0 0;
 }
@@ -193,10 +99,13 @@ nav ul li a:hover {
     margin: 10px 0;
 }
 
+.artist-card:hover {
+    transform: scale(1.05);
+}
+
 .artist-links, .btn {
     margin-top: 10px;
     display: block;
-    margin-top: 10px;
     padding: 10px;
     background-color: #007BFF;
     color: #fff;
@@ -205,8 +114,32 @@ nav ul li a:hover {
     text-align: center;
 }
 
-.btn:hover {
+.artist-links:hover, .btn:hover {
     background-color: #0056b3;
+}
+
+/* Concert Table Styles */
+.concert-table {
+    margin-top: 20px;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.concert-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.concert-table th, .concert-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ccc;
+}
+
+.concert-table th {
+    background-color: #007BFF;
+    color: white;
 }
 
 /* Footer Styles */
@@ -214,21 +147,23 @@ footer {
     background-color: #333;
     color: #fff;
     text-align: center;
-    padding: 10px;
+    padding: 20px;
     margin-top: auto;
 }
 
 /* Responsive Styles */
 @media (max-width: 768px) {
     .artists-grid {
-        flex-direction: column; /* Stacks artist cards vertically */
-        align-items: center; /* Centers the cards */
+        grid-template-columns: 1fr;
+        gap: 15px;
     }
-    body {
-        font-size: 0.9rem;
-    }
-}
 
-body {
-    flex: 1;
+    body {
+        font-size: 1.2rem;
+    }
+
+    nav ul li {
+        display: block;
+        margin: 10px 0;
+    }
 }
