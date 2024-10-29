@@ -1,6 +1,7 @@
 package api
 
 import (
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -15,7 +16,7 @@ type DatesLocationsAPIResponse struct {
 	Index []DatesLocations `json:"index"`
 }
 
-func (h *Handler) RelationsHandler(w http.ResponseWriter, r *http.Request) {
+func RelationsHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return
@@ -24,6 +25,7 @@ func (h *Handler) RelationsHandler(w http.ResponseWriter, r *http.Request) {
 	// Get and split the URL path
 	path := r.URL.Path
 	parts := strings.Split(path, "/")
+	log.Printf("parts -> %v", parts)
 
 	// The artist ID is the third element in the path (e.g., "artist/1/relations")
 	if len(parts) < 3 {
@@ -31,18 +33,21 @@ func (h *Handler) RelationsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	artistID, err := strconv.Atoi(parts[2])
+	artistID, err := strconv.Atoi(parts[3])
 	if err != nil {
 		http.Error(w, "Invalid artist ID", http.StatusBadRequest)
 		return
 	}
 
 	url := "https://groupietrackers.herokuapp.com/api/relation"
-	data, err := h.FetchData(url, &DatesLocationsAPIResponse{})
+	data, err := FetchData(url, &DatesLocationsAPIResponse{})
 	if err != nil {
+		log.Printf("Error Fetching relations data : %q\n", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
+
+	log.Println("Data fetch successful")
 
 	// Type assertion to convert data to *DatesLocationsAPIResponse
 	apiResponse, ok := data.(*DatesLocationsAPIResponse)
@@ -66,5 +71,6 @@ func (h *Handler) RelationsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	h.RenderTemplate(w, "artist.html", artistData)
+	RenderTemplate(w, "relations.html", artistData)
+	log.Println("Finished rendering relations data")
 }

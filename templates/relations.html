@@ -9,7 +9,6 @@
 <body>
     <h1>Tour Dates and Locations Information</h1>
     <div class="tour-grid">
-        {{range .Index}}
         <div class="tour-card">
             <h2>Tour ID: {{.ID}}</h2>
             <ul>
@@ -24,7 +23,6 @@
                 {{end}}
             </ul>
         </div>
-        {{end}}
     </div>
 </body>
 </html>
