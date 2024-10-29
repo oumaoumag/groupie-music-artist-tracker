@@ -1,7 +1,6 @@
 package api
 
 import (
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -18,7 +17,6 @@ type DatesLocationsAPIResponse struct {
 
 func (h *Handler) RelationsHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		log.Printf("Invalid method : %S", r.Method)
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return
 	}
@@ -26,7 +24,6 @@ func (h *Handler) RelationsHandler(w http.ResponseWriter, r *http.Request) {
 	// Get and split the URL path
 	path := r.URL.Path
 	parts := strings.Split(path, "/")
-	log.Println("parts -> ",parts)
 
 	// The artist ID is the third element in the path (e.g., "artist/1/relations")
 	if len(parts) < 3 {
@@ -40,8 +37,6 @@ func (h *Handler) RelationsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Printf("Extracted artist Id %d\n", artistID)
-	
 	url := "https://groupietrackers.herokuapp.com/api/relation"
 	data, err := h.FetchData(url, &DatesLocationsAPIResponse{})
 	if err != nil {
@@ -70,7 +65,6 @@ func (h *Handler) RelationsHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Artist not found", http.StatusNotFound)
 		return
 	}
-	
 
 	h.RenderTemplate(w, "artist.html", artistData)
 }

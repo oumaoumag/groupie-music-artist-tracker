@@ -99,23 +99,8 @@ nav ul li a:hover {
     margin: 10px 0;
 }
 
-.artist-card:hover {
-    transform: scale(1.05);
-}
-
-.artist-links, .btn {
-    margin-top: 10px;
-    display: block;
-    padding: 10px;
-    background-color: #007BFF;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 5px;
-    text-align: center;
-}
-
-.artist-links:hover, .btn:hover {
-    background-color: #0056b3;
+.artist-card p {
+    margin: 10px 0;
 }
 
 /* Concert Table Styles */

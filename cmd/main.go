@@ -16,7 +16,7 @@ func main() {
 
 	http.HandleFunc("/", handler.HomepageHandler)
 	http.HandleFunc("/artist/", handler.ArtistsHandler)
-	http.HandleFunc("/artist/{ID}/relations", handler.RelationsHandler)
+	http.HandleFunc("/artist/", handler.RelationsHandler)
 	// http.HandleFunc("/dates", handler.DatesHandler)
 
 	http.HandleFunc("/compare", handler.CompareArtistInfo) // New route for comparing data

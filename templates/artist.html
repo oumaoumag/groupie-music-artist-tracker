@@ -17,13 +17,13 @@
     </header>
 
     <section class="artist-details">
-        <div class="artist-card centered-artist-card">
+        <h2>{{.Name}}</h2>
+        <div class="artist-card">
             <img src="{{.Image}}" alt="{{.Name}}">
             <p><strong>Creation Date:</strong> {{.CreationDate}}</p>
             <p><strong>First Album:</strong> {{.FirstAlbum}}</p>
             <p><strong>Members:</strong> {{range .Members}}{{.}}, {{end}}</p>
-            <a href="/artist/{{.ID}}/relations" class="artist-relations link">
-                <p><strong>Tour Dates and Locations</strong></p></a>
+            <a href="/artist/{{.ID}}/relations" class="artist-relations link"><p><strong>Tour Dates and Locations</strong></p></a>
         </div>
 
         <section class="concert-table">

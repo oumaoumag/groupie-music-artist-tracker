@@ -1,7 +1,6 @@
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"html/template"
@@ -34,14 +33,9 @@ func RenderTemplate(w http.ResponseWriter, tmpl string, data interface{}) {
 		return
 	}
 	log.Println("Rendering template:", tmpl)
-	var buf bytes.Buffer
-
+	
 	if err := t.Execute(w, data); err != nil {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-
-	buf.WriteTo(w)
-
-	log.Println("Rendering template: ", tmpl)
 }
