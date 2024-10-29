@@ -7,175 +7,192 @@ body {
     flex-direction: column;
     min-height: 100vh;
     margin: 0;
-    font-size: 2.0rem;
+    font-size: 2rem;
     line-height: 1.8;
 }
 
-.welcome-section {
-    background-image: url('/static/b3.jpeg');
-    background-size: contain;
-    background-position: center;
-    background-attachment: fixed;
-    width: auto;
-}
-
-.text-content {
-    max-width: 1050px;
-    text-size-adjust: 100%;
-    text-align: center;
-    margin: 0 auto;
-    padding: 20px;
+/* Header & Footer */
+.header, .footer {
     background-color: rgba(0, 0, 0, 0.5);
-}
-
-h1, h2, h3 {
+    color: #fff;
     text-align: center;
-    padding: 20px 0;
-    margin: 0;
-    line-height: 1.2;
+    padding: 20px;
 }
 
 /* Navigation Styles */
-nav {
-    background-color: rgba(0, 0, 0, 0.5);
-    color: #fff;
-    padding: 10px 0;
-    text-align: center;
-}
-
 nav ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
 }
-
 nav ul li {
     display: inline;
+    padding: 0 20px;
 }
-
 nav ul li a {
-    padding: 14px 20px;
     text-decoration: none;
     color: #fff;
     font-weight: bold;
 }
-
 nav ul li a:hover {
     color: #007BFF;
 }
 
-/* Artists Grid */
-.artists-grid {
+/* Welcome Section */
+.welcome-section {
+    background-image: url('/static/b3.jpeg');
+    background-size: contain; /* Ensures the background image covers the section */
+    background-position: center;
+    background-attachment: fixed;
+    padding: 50px;
+    text-align: center; /* Center the welcome section text */
+    font-size: 3rem; /* Increased font size */
+    font-weight: bold;
+    color: #fff; /* Ensure text color is white */
+}
+
+/* Tour Section */
+.tour-info {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    padding: 10px;
+    justify-content: center; /* Center the tour section */
+    align-items: center;
+    flex-grow: 1; /* Allow it to grow and fill space */
+    padding: 40px 0;
+}
+
+.tour-grid {
+    display: flex;
+    justify-content: center; /* Center the tour cards */
+    flex-wrap: wrap; /* Allow wrapping for responsive design */
+    gap: 20px; /* Add spacing between cards */
+}
+
+/* Tour Table Styles */
+.tour-dates-table {
+    width: 80%; /* Adjust as needed */
+    background-color: rgba(181, 175, 214, 0.689);
+    border-collapse: collapse;
+    text-align: left; /* Ensure data inside is left-aligned */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden; /* Prevents borders from overflowing */
+    margin-top: 20px;
+}
+
+.tour-dates-table th, .tour-dates-table td {
+    padding: 15px;
+    border: 1px solid #ddd; /* Border for table cells */
+}
+
+.tour-dates-table th {
+    background-color: #4B0082; /* Dark purple for header */
+    color: white;
+    font-size: 1.6rem; /* Font size for table headers */
+}
+
+.tour-dates-table tbody {
+    background-color: rgba(255, 255, 255, 0.1); /* Lighter background for body */
+    color: #fff; /* White text for table data */
+    font-size: 1.4rem; /* Font size for table data */
+}
+
+/* Tour Table Locations */
+.tour-table-locations {
+    display: flex;
+    justify-content: center; /* Center the table horizontally */
+    align-items: center;
+    min-height: 50vh; /* Minimum height for the table section */
+    padding: 40px 20px;
+}
+
+/* Artists Grid Styles */
+.artists-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Limit to 4 artists per row */
+    gap: 20px;
+    padding: 20px;
+    justify-items: center; /* Center items horizontally */
 }
 
 .artist-card {
-    background-color: rgba(0, 0, 0, 0.5);
-    flex-direction: column;
-    align-items: center;
-    border: 1px solid #ccc;
+    background-color: rgba(181, 175, 214, 0.689);
     border-radius: 10px;
-    width: 400px;
-    margin-bottom: 10px;
-    margin-left: 10px;
+    width: 550px; /* Increased width */
+    margin: 10px;
     text-align: center;
     transition: transform 0.3s;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    font-size: 1em;
-    color: #fff;
 }
 
 .artist-card img {
     width: 100%;
-    height: auto;
     border-radius: 8px 8px 0 0;
 }
 
-/* Artist Details Styles */
-.artist-details {
-    padding: 20px;
+.artist-card:hover {
+    transform: scale(1.05);
 }
 
-.artist-card {
+/* Artist Names in the Grid */
+.artist-card p {
+    color: #fff; /* Artist names are white */
+    font-size: 1.6rem; /* Increased font size for artist names */
+    font-weight: bold;
+}
+
+/* Centered Artist Card */
+.centered {
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
     align-items: center;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    padding: 20px;
+}
+
+/* Button Styles */
+.artist-button {
+    background-color: #4B0082; /* Dark Purple */
+    color: #fff;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 25px; /* Rounded shape */
+    cursor: pointer;
+    font-size: 1.4rem; /* Slightly larger font size */
     margin: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s ease;
+}
+.artist-button:hover {
+    background-color: #6A0DAD; /* Slightly lighter purple on hover */
 }
 
-.artist-card p {
-    margin: 10px 0;
-}
-
-/* Concert Table Styles */
-.concert-table {
-    margin-top: 20px;
-    background-color: rgba(0, 0, 0, 0.5);
-    padding: 15px;
-    border-radius: 10px;
-}
-
-.concert-table table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.concert-table th, .concert-table td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid #ccc;
-}
-
-/* Button and Link Styles */
-.artist-links,
-.btn {
-    margin-top: 10px;
-    display: block;
-    padding: 10px;
-    background-color: #007BFF;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 5px;
-    text-align: center;
-}
-
-.artist-links:hover,
-.btn:hover {
-    background-color: #0056b3;
-}
-
-.artist-card.link {
-    color: inherit; /* Keeps text color the same as parent */
-    text-decoration: none; /* Removes underline */
-}
-
-.artist-card.link:hover {
-    transform: scale(1.05); /* Slightly enlarges on hover */
-}
-
-/* Footer Styles */
+/* Footer */
 .footer {
-    background-color: rgba(0, 0, 0, 0.5);
-    color: #fff;
-    text-align: center;
-    padding: 20px; /* Adds more space in the footer */
     margin-top: auto;
 }
 
 /* Responsive Styles */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
+    .tour-dates-table {
+        width: 90%; /* Adjust table width on medium screens */
+    }
     .artists-grid {
-        flex-direction: column; /* Stacks artist cards vertically */
-        align-items: center; /* Centers the cards */
+        grid-template-columns: repeat(2, 1fr); /* Reduce to 2 artists per row on medium screens */
+    }
+    .tour-card {
+        width: 80%; /* Adjust card width for medium screens */
+    }
+}
+
+@media (max-width: 768px) {
+    .tour-dates-table {
+        width: 100%; /* Full width table on small screens */
+    }
+    .artists-grid {
+        grid-template-columns: repeat(1, 1fr); /* Single column for smaller screens */
+    }
+    .tour-card {
+        width: 100%; /* Full width for smaller screens */
     }
     body {
-        font-size: 0.9rem;
+        font-size: 1.2rem; /* Reduce font size on small screens */
     }
 }

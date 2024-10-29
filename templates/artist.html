@@ -17,23 +17,23 @@
     </header>
 
     <section class="artist-details">
-        <h2>{{.Name}}</h2>
-        <div class="artist-card">
+        <div class="artist-card centered">
             <img src="{{.Image}}" alt="{{.Name}}">
             <p><strong>Creation Date:</strong> {{.CreationDate}}</p>
             <p><strong>First Album:</strong> {{.FirstAlbum}}</p>
             <p><strong>Members:</strong> {{range .Members}}{{.}}, {{end}}</p>
 
-
             <a href="/artist/relations/{{.ID}}" class="artist-relations link">
-               <button><strong>Relations</strong></button></a>
+                <button class="artist-button"><strong>Relations</strong></button>
+            </a>
                
-               <a href="/artist/dates//{{.ID}}" class="artist-dates link">
-                <button><strong>Dates</strong></button></a>
+            <a href="/artist/dates//{{.ID}}" class="artist-dates link">
+                <button class="artist-button"><strong>Dates</strong></button>
+            </a>
                 
-                <a href="/artist/locations/{{.ID}}" class="artist-locations link">
-                    <button><strong>Locations</strong></button></a>
-    <a href="/"><button>Back to Artists</button></a>
+            <a href="/artist/locations/{{.ID}}" class="artist-locations link">
+                <button class="artist-button"><strong>Locations</strong></button>
+            </a>
         </div>
     </section>
     

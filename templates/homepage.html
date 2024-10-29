@@ -8,38 +8,33 @@
 </head>
 <body>
     <header class="header">
-    <h1>Groupie Tracker</h1>
-    <nav>
-        <ul>
-            <!-- <li><a href="/homepage">Home</a></li> -->
-            <li><a href="/">home</a></li>
-        </ul>
-    </nav>
+        <h1>Groupie Tracker</h1>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+            </ul>
+        </nav>
     </header>
     
     <section class="welcome-section">
         <div class="text-content">
-            <h2>Welcome to Your Music Industry Homepage</h2>
-            <p>Explore information about your favorite artists, where they performed, and more!</p>
+            <h2>Welcome to the Music Tracker</h2>
+            <p>Explore details about your favorite artists, their tours, and more.</p>
             <form method="GET" action="/artist">
-                <input type="text" name="search" placeholder="Search artists...">
-                <button type="submit">Search</button>
+                <input type="text" name="search" placeholder="Search artists..." class="search-input">
+                <button type="submit" class="btn">Search</button>
             </form>
-    </div>
-</section>
-
-    <section>
-        <div class="artists-grid">
-            {{range .}}
-        <a href="/artist/{{.ID}}" class="artist-card link">
-            <div class="artist-card">
-                <h2>{{.Name}}</h2>
-                <img src="{{.Image}}" alt="{{.Name}}">
-            </div>
-        </a>
-            {{end}}
         </div>
-</section>
+    </section>
+
+    <section class="artists-grid">
+        {{range .}}
+        <a href="/artist/{{.ID}}" class="artist-card link">
+            <h2>{{.Name}}</h2>
+            <img src="{{.Image}}" alt="{{.Name}}">
+        </a>
+        {{end}}
+    </section>
 
     <footer class="footer">
         <p>&copy; 2024 Groupie-Tracker. All rights reserved.</p>

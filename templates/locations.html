@@ -7,26 +7,40 @@
     <link rel="stylesheet" type="text/css" href="/static/style.css">
 </head>
 <body>
-    <h1>Tour Locations</h1>
-    <table class="tour-table">
-        <thead>
-            <tr>
-                <th>Tour ID</th>
-                <th>Locations</th>
-            </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>{{.ID}}</td>
-            <td>
-                <ul>
-                    {{range .Locations}}
-                    <li>{{.}}</li>
-                    {{end}}
-                </ul>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <header class="header">
+        <h1>Tour Locations</h1>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="tour-table-locations">
+        <table class="tour-dates-table"> <!-- Ensure class is present here for styling -->
+            <thead>
+                <tr>
+                    <th>Tour ID</th>
+                    <th>Locations</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{.ID}}</td>
+                    <td>
+                        <ul>
+                            {{range .Locations}} <!-- Ensure this is correctly provided from Go -->
+                            <li>{{.}}</li>
+                            {{end}}
+                        </ul>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <footer class="footer">
+        <p>&copy; 2024 Groupie-Tracker. All rights reserved.</p>
+    </footer>
 </body>
 </html>

@@ -3,26 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tour Dates and Locations Information</title>
+    <title>Tour Dates and Locations</title>
     <link rel="stylesheet" type="text/css" href="/static/style.css">
 </head>
 <body>
-    <h1>Tour Dates and Locations Information</h1>
-    <div class="tour-grid">
-        <div class="tour-card">
-            <h2>Tour ID: {{.ID}}</h2>
+    <header class="header">
+        <h1>Tour Dates and Locations</h1>
+        <nav>
             <ul>
-                {{range $location, $dates := .DatesLocations}}
-                <li>{{ $location }}
-                    <ul>
-                        {{range $dates}}
-                        <li>{{.}}</li>
-                        {{end}}
-                    </ul>
-                </li>
-                {{end}}
+                <li><a href="/">Home</a></li>
             </ul>
-        </div>
-    </div>
+        </nav>
+    </header>
+    
+    <section class="tour-info">
+        <table class="tour-dates-table">
+            <thead>
+                <tr>
+                    <th>Tour ID</th>
+                    <th>Location</th>
+                    <th>Dates</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{.ID}}</td>
+                    <td>
+                        <ul>
+                            {{range $location, $dates := .DatesLocations}}
+                            <li>{{ $location }}</li>
+                            {{end}}
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            {{range $location, $dates := .DatesLocations}}
+                            <li>
+                                <ul>
+                                    {{range $dates}}
+                                    <li>{{.}}</li>
+                                    {{end}}
+                                </ul>
+                            </li>
+                            {{end}}
+                        </ul>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <footer class="footer">
+        <p>&copy; 2024 Groupie-Tracker. All rights reserved.</p>
+    </footer>
 </body>
 </html>

@@ -1,13 +1,29 @@
-<!-- templates/error.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{{.Code}} - {{.Message}}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error {{.Code}} - {{.Message}}</title>
     <link rel="stylesheet" type="text/css" href="/static/style.css">
 </head>
 <body>
-    <h1>{{.Code}} - {{.Message}}</h1>
-    <p>{{.Description}}</p>
+    <header class="header">
+        <h1>Error: {{.Code}}</h1>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="error-section">
+        <h2>{{.Message}}</h2>
+        <p>{{.Description}}</p>
+        <a href="/" class="btn">Go Back to Home</a>
+    </section>
+
+    <footer class="footer">
+        <p>&copy; 2024 Groupie-Tracker. All rights reserved.</p>
+    </footer>
 </body>
 </html>
