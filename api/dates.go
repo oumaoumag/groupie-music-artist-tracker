@@ -16,23 +16,23 @@ type DatesAPIResponse struct {
 	Index []Date `json:"index"`
 }
 
-func (h *Handler) DatesHandler(w http.ResponseWriter, r *http.Request) {
+func DatesHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
 	url := "https://groupietrackers.herokuapp.com/api/dates"
-	data, err := h.FetchData(url, &DatesAPIResponse{})
+	data, err := FetchData(url, &DatesAPIResponse{})
 	if err != nil {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-	h.RenderTemplate(w, "dates.html", data)
+	RenderTemplate(w, "dates.html", data)
 }
 
 // This function compares the lengths of the Locations and Dates for the artist with the same ID
-func (h *Handler) CompareArtistInfo(w http.ResponseWriter, r *http.Request) {
+func  CompareArtistInfo(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return
@@ -41,7 +41,7 @@ func (h *Handler) CompareArtistInfo(w http.ResponseWriter, r *http.Request) {
 	// Fetch Locations data
 	locationsURL := "https://groupietrackers.herokuapp.com/api/locations"
 	var locationsResponse LocationsAPIResponse
-	_,err := h.FetchData(locationsURL, &locationsResponse)
+	_,err := FetchData(locationsURL, &locationsResponse)
 	if err != nil {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
@@ -50,7 +50,7 @@ func (h *Handler) CompareArtistInfo(w http.ResponseWriter, r *http.Request) {
 	// Fetch Dates data
 	datesURL := "https://groupietrackers.herokuapp.com/api/dates"
 	var datesResponse DatesAPIResponse
-	_, err = h.FetchData(datesURL, &datesResponse)
+	_, err = FetchData(datesURL, &datesResponse)
 	if err != nil {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return

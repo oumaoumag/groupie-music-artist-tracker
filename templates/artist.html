@@ -23,11 +23,15 @@
             <p><strong>Creation Date:</strong> {{.CreationDate}}</p>
             <p><strong>First Album:</strong> {{.FirstAlbum}}</p>
             <p><strong>Members:</strong> {{range .Members}}{{.}}, {{end}}</p>
-            <a href="/artist/{{.ID}}/relations" class="artist-relations link">
+
+
+            <a href="/artist/relations/{{.ID}}" class="artist-relations link">
                <button><strong>Relations</strong></button></a>
-               <a href="/artist/{{.ID}}/dates" class="artist-dates link">
+               
+               <a href="/artist/dates//{{.ID}}" class="artist-dates link">
                 <button><strong>Dates</strong></button></a>
-                <a href="/artist/{{.ID}}/locations" class="artist-locations link">
+                
+                <a href="/artist/locations/{{.ID}}" class="artist-locations link">
                     <button><strong>Locations</strong></button></a>
     <a href="/"><button>Back to Artists</button></a>
         </div>

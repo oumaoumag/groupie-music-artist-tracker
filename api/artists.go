@@ -19,14 +19,10 @@ type Artist struct {
 	Relations    string   `json:"relations"`
 }
 
-// Handler struct encapsulates dependencies for our HTTP handlers
-type Handler struct {
-	FetchData      func(url string, target interface{}) (interface{}, error)
-	RenderTemplate func(w http.ResponseWriter, tmpl string, data interface{})
-}
+
 
 // ArtistsHandler handles the request to fetch artist data or filter by search query
-func (h *Handler) ArtistsHandler(w http.ResponseWriter, r *http.Request) {
+func ArtistsHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return
@@ -47,7 +43,7 @@ func (h *Handler) ArtistsHandler(w http.ResponseWriter, r *http.Request) {
 	data := []Artist{}
 
 	// Fetch artist data
-	if _, err := h.FetchData(url, &data); err != nil {
+	if _, err := FetchData(url, &data); err != nil {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -65,7 +61,7 @@ func (h *Handler) ArtistsHandler(w http.ResponseWriter, r *http.Request) {
 
 				log.Printf("Rendering artist for ID: %d\n", artistID)
 
-				h.RenderTemplate(w, "artist.html", artist) // Render single artist template
+				RenderTemplate(w, "artist.html", artist) // Render single artist template
 				return
 			}
 		}
@@ -88,11 +84,11 @@ func (h *Handler) ArtistsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Render the homepage with all artists (or filtered results)
-	h.RenderTemplate(w, "homepage.html", data)
+	RenderTemplate(w, "homepage.html", data)
 }
 
 // homepageHandler: handles requests to the homepagae of the website
-func (h *Handler) HomepageHandler(w http.ResponseWriter, r *http.Request) {
+func HomepageHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("Received request for homepage")
 	
 	if r.Method != http.MethodGet {
@@ -108,12 +104,12 @@ func (h *Handler) HomepageHandler(w http.ResponseWriter, r *http.Request) {
 	data := []Artist{}
 
 	// Fetch artist data
-	if _, err := h.FetchData(url, &data); err != nil {
+	if _, err := FetchData(url, &data); err != nil {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
 	// Render the homepage with all artists (or filtered results)
-	h.RenderTemplate(w, "homepage.html", data)
+	RenderTemplate(w, "homepage.html", data)
 	log.Println("Finished handling request for homepage")
 }
