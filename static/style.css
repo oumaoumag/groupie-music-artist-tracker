@@ -1,74 +1,143 @@
-
-
- /* Global Styles */
+/* Global Styles */
 body {
+    background: linear-gradient(to bottom right, #07050a, #190087);
     font-family: Arial, sans-serif;
-    background-color: black;
     color: #fff;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
     margin: 0;
+    font-size: 2.0rem;
+    line-height: 1.8;
 }
 
-h1 {
+.welcome-section {
+    background-image: url('/static/b3.jpeg');
+    background-size: contain;
+    background-position: center;
+    background-attachment: fixed;
+    width: auto;
+}
+
+.text-content {
+    max-width: 1050px;
+    text-size-adjust: 100%;
+    text-align: center;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+h1, h2, h3 {
     text-align: center;
     padding: 20px 0;
+    margin: 0;
+    line-height: 1.2;
 }
 
+/* Navigation Styles */
 nav {
-    background-color: #333;
+    background-color: rgba(0, 0, 0, 0.5);
     color: #fff;
     padding: 10px 0;
     text-align: center;
 }
 
-nav a {
-    color: #fff;
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+}
+
+nav ul li a {
+    padding: 14px 20px;
     text-decoration: none;
+    color: #fff;
     font-weight: bold;
-    margin: 0 15px
 }
 
 nav ul li a:hover {
     color: #007BFF;
 }
+
+/* Artists Grid */
 .artists-grid {
-    display: grid;
-    flex-grow: 1;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
-    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 10px;
 }
 
 .artist-card {
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.5);
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    width: 400px;
+    margin-bottom: 10px;
+    margin-left: 10px;
     text-align: center;
-    color: #333;
+    transition: transform 0.3s;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    font-size: 1em;
+    color: #fff;
 }
 
 .artist-card img {
-    width: 10%;
+    width: 100%;
     height: auto;
     border-radius: 8px 8px 0 0;
 }
 
-.artist-card h2 {
-    font-size: 1.5em;
-    margin-bottom: 10px;
+/* Artist Details Styles */
+.artist-details {
+    padding: 20px;
+}
+
+.artist-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
 .artist-card p {
     margin: 10px 0;
 }
 
-.artist-links, .btn {
+/* Concert Table Styles */
+.concert-table {
+    margin-top: 20px;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.concert-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.concert-table th, .concert-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ccc;
+}
+
+/* Button and Link Styles */
+.artist-links,
+.btn {
     margin-top: 10px;
     display: block;
-    margin-top: 10px;
     padding: 10px;
     background-color: #007BFF;
     color: #fff;
@@ -77,16 +146,26 @@ nav ul li a:hover {
     text-align: center;
 }
 
+.artist-links:hover,
 .btn:hover {
     background-color: #0056b3;
 }
 
+.artist-card.link {
+    color: inherit; /* Keeps text color the same as parent */
+    text-decoration: none; /* Removes underline */
+}
+
+.artist-card.link:hover {
+    transform: scale(1.05); /* Slightly enlarges on hover */
+}
+
 /* Footer Styles */
-footer {
-    background-color: #333;
+.footer {
+    background-color: rgba(0, 0, 0, 0.5);
     color: #fff;
     text-align: center;
-    padding: 10px;
+    padding: 20px; /* Adds more space in the footer */
     margin-top: auto;
 }
 
@@ -99,8 +178,4 @@ footer {
     body {
         font-size: 0.9rem;
     }
-}
-
-body {
-    flex: 1;
 }
