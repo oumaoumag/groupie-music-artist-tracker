@@ -8,18 +8,15 @@ import (
 )
 
 func main() {
-	// A new Handler instance, passing in the FetchData and RenderTemplate functions from the api package
-	handler := &api.Handler{
-		FetchData:      api.FetchData,
-		RenderTemplate: api.RenderTemplate,
-	}
 
-	http.HandleFunc("/", handler.HomepageHandler)
-	http.HandleFunc("/artist/", handler.ArtistsHandler)
-	http.HandleFunc("/artist/relations", handler.RelationsHandler)
-	// http.HandleFunc("/dates", handler.DatesHandler)
+	http.HandleFunc("/", api.HomepageHandler)
+	http.HandleFunc("/artist/", api.ArtistsHandler)
+	http.HandleFunc("/artist/relations/", api.RelationsHandler)
+	http.HandleFunc("/artist/dates/", api.DatesHandler)
+	http.HandleFunc("/artist/locations/", api.LocationsHandler)
 
-	http.HandleFunc("/compare", handler.CompareArtistInfo) // New route for comparing data
+
+	// http.HandleFunc("/compare", api.CompareArtistInfo) // New route for comparing data
 
 	
 
