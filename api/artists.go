@@ -24,7 +24,7 @@ type Artist struct {
 // ArtistsHandler handles the request to fetch artist data or filter by search query
 func ArtistsHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+		RenderErrorPage(w, http.StatusMethodNotAllowed, "Method Not Allowed", "Only GET method is supported.")
 		return
 	}
 
@@ -44,7 +44,7 @@ func ArtistsHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Fetch artist data
 	if _, err := FetchData(url, &data); err != nil {
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		RenderErrorPage(w, http.StatusInternalServerError, "Internal Server Error", "Unable to fetch artist data.")
 		return
 	}
 
@@ -61,8 +61,8 @@ func ArtistsHandler(w http.ResponseWriter, r *http.Request) {
 
 				log.Printf("Rendering artist for ID: %d\n", artistID)
 
-				RenderTemplate(w, "artist.html", artist) // Render single artist template
-				return
+				// RenderErrorPage(w, http.StatusNotFound, "Artist Not Found", "The requested artist could not be found.")
+				// return
 			}
 		}
 		// If artist not found, return a 404
