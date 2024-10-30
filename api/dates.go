@@ -73,10 +73,9 @@ func DatesHandler(w http.ResponseWriter, r *http.Request) {
 
 	// If not artist data is found
 	if artistData.ID == 0 {
-		http.Error(w, "Artist not found", http.StatusNotFound)
-		return
+		RenderErrorPage(w, http.StatusNotFound, "Artist Not Found", "The artist you are looking for does not exist.")
+       return
 	}
-
 	RenderTemplate(w, "dates.html", artistData)
 	log.Println("Finished rendering Dates")
 

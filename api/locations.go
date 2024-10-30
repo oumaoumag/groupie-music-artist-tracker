@@ -20,7 +20,7 @@ type LocationsAPIResponse struct {
 
 func LocationsHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+		RenderErrorPage(w, http.StatusMethodNotAllowed, "Method Not Allowed", "Only GET method is supported.")
 		return
 	}
 
@@ -36,15 +36,16 @@ func LocationsHandler(w http.ResponseWriter, r *http.Request) {
 
 	artistID, err := strconv.Atoi(parts[3])
 	if err != nil {
-		http.Error(w, "Invalid artist ID", http.StatusBadRequest)
+		RenderErrorPage(w, http.StatusBadRequest, "Bad Request", "Invalid artist id.")
 		return
+		
 	}
 
 	url := "https://groupietrackers.herokuapp.com/api/locations"
 	data, err := FetchData(url, &LocationsAPIResponse{})
 	if err != nil {
 		log.Printf("Error FEtching relations data : %q\n", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		RenderErrorPage(w, http.StatusInternalServerError, "Internal Server Error", "Unable to fetch artist relation.")
 		return
 	}
 
@@ -53,7 +54,7 @@ func LocationsHandler(w http.ResponseWriter, r *http.Request) {
 	// TYpe assertion to convert data to *LocationsAPIResponse
 	apiResponse, ok := data.(*LocationsAPIResponse)
 	if !ok {
-		http.Error(w, "Invalid data format", http.StatusInternalServerError)
+		RenderErrorPage(w, http.StatusInternalServerError, "Internal Server Error", "invalid data formata.")
 		return
 	}
 
@@ -68,8 +69,8 @@ func LocationsHandler(w http.ResponseWriter, r *http.Request) {
 
 	// If not artist data is found
 	if artistData.ID == 0 {
-		http.Error(w, "Artist not found", http.StatusNotFound)
-		return
+		RenderErrorPage(w, http.StatusNotFound, "Artist Not Found", "The artist you are looking for does not exist.")
+        return
 	}
 
 	RenderTemplate(w, "locations.html", artistData)
