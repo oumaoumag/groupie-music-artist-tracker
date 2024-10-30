@@ -35,6 +35,12 @@ func ArtistsHandler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("urlPath -> %v\n", urlPath)
 
 	artistID, err := strconv.Atoi(urlPath) // Convert to integer if a number
+	if err != nil {
+		RenderErrorPage(w, http.StatusInternalServerError, "Internal Server Error", " 	Wrong ID")
+
+		// http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
 
 	log.Printf("ArtistId - %d\n", artistID)
 
@@ -49,24 +55,27 @@ func ArtistsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// log.Printf("Fetched artist data: %+v\n", data)
-	if err != nil {
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	}
+	
 
+	var artistData Artist
 	// Check if we're fetching a specific artist by ID
 	if  artistID > 0 {
 		for _, artist := range data {
 			if artist.ID == artistID {
 
 				log.Printf("Rendering artist for ID: %d\n", artistID)
+				artistData = artist
+				RenderTemplate(w, "artist.html", artistData)
 
 				// RenderErrorPage(w, http.StatusNotFound, "Artist Not Found", "The requested artist could not be found.")
 				// return
+				return
 			}
 		}
 		// If artist not found, return a 404
-		http.Error(w, "Artist Not Found", http.StatusNotFound)
+		RenderErrorPage(w, http.StatusNotFound, "Artist Not Found", "The requested artist could not be found.")
+				// return
+		// http.Error(w, "Artist Not Found", http.StatusNotFound)
 		return
 	}
 
@@ -74,6 +83,7 @@ func ArtistsHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Handle search queries
 	searchQuery := r.URL.Query().Get("search")
+	log.Println("Search - Query -> ", searchQuery)
 	if searchQuery != "" {
 		for _, artist := range data {
 			if strings.Contains(strings.ToLower(artist.Name), strings.ToLower(searchQuery)) {
