@@ -21,8 +21,9 @@ type DatesAPIResponse struct {
 
 func DatesHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+		RenderErrorPage(w, http.StatusMethodNotAllowed, "Method Not Allowed", "Only GET method is supported.")
 		return
+		
 	}
 
 	// Get and split the URL path
@@ -31,21 +32,24 @@ func DatesHandler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("parts of split dates URL -> %v", parts)
 
 	if len(parts) < 3 {
-		http.Error(w, "Artist ID not found in URL", http.StatusBadRequest)
+		RenderErrorPage(w, http.StatusBadRequest, "Bad Request", "Artist Id not found in url.")
 		return
+		
 	}
 
 	artistID, err := strconv.Atoi(parts[3])
 	if err != nil {
-		http.Error(w, "Invalid artist ID", http.StatusBadRequest)
+		RenderErrorPage(w, http.StatusBadRequest, "Bad Request", "Invalid artist id.")
 		return
+		
 	}
 
 	url := "https://groupietrackers.herokuapp.com/api/dates"
 	data, err := FetchData(url, &DatesAPIResponse{})
 	if err != nil {
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		RenderErrorPage(w, http.StatusMethodNotAllowed, "Internal Server Error", "Unable to find artist date.")
 		return
+		
 	}
 
 	log.Println("Data fetch successful")
@@ -53,8 +57,9 @@ func DatesHandler(w http.ResponseWriter, r *http.Request) {
 	// TYpe assertion to convert data to *LocationsAPIResponse
 	apiResponse, ok := data.(*DatesAPIResponse)
 	if !ok {
-		http.Error(w, "Invalid data format", http.StatusInternalServerError)
+		RenderErrorPage(w, http.StatusInternalServerError, "Internal Server Error", "invalid data formata.")
 		return
+		
 	}
 
 	var artistData Date
@@ -80,7 +85,7 @@ func DatesHandler(w http.ResponseWriter, r *http.Request) {
 // This function compares the lengths of the Locations and Dates for the artist with the same ID
 func CompareArtistInfo(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+		RenderErrorPage(w, http.StatusMethodNotAllowed, "Method Not Allowed", "Only GET method is supported.")
 		return
 	}
 
@@ -89,7 +94,7 @@ func CompareArtistInfo(w http.ResponseWriter, r *http.Request) {
 	var locationsResponse LocationsAPIResponse
 	_, err := FetchData(locationsURL, &locationsResponse)
 	if err != nil {
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		RenderErrorPage(w, http.StatusInternalServerError, "Internal Server Error", "Unable to fetch artist data.")
 		return
 	}
 
