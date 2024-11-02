@@ -8,17 +8,18 @@ import (
 )
 
 func main() {
+	h := api.Handler{
+		FetchData:      api.FetchData,
+		RenderTemplate: api.RenderTemplate,
+	}
 
-	http.HandleFunc("/", api.HomepageHandler)
-	http.HandleFunc("/artist/", api.ArtistsHandler)
-	http.HandleFunc("/artist/relations/", api.RelationsHandler)
-	http.HandleFunc("/artist/dates/", api.DatesHandler)
-	http.HandleFunc("/artist/locations/", api.LocationsHandler)
-
+	http.HandleFunc("/", h.HomepageHandler)
+	http.HandleFunc("/artist", h.ArtistsHandler)
+	// http.HandleFunc("/artist/relations/", h.RelationsHandler)
+	// http.HandleFunc("/artist/dates/", h.DatesHandler)
+	// http.HandleFunc("/artist/locations/", h.LocationsHandler)
 
 	// http.HandleFunc("/compare", api.CompareArtistInfo) // New route for comparing data
-
-	
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	log.Println("Server running on http://localhost:8080")
