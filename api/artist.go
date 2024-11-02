@@ -67,7 +67,9 @@ func (h *Handler) ArtistsHandler(w http.ResponseWriter, r *http.Request) {
 			if artist.ID == artistID {
 
 				log.Printf("Rendering artist for ID: %d\n", artistID)
+
 				artistData = artist
+
 				RenderTemplate(w, "artist.html", artistData)
 
 				// RenderErrorPage(w, http.StatusNotFound, "Artist Not Found", "The requested artist could not be found.")
@@ -80,20 +82,6 @@ func (h *Handler) ArtistsHandler(w http.ResponseWriter, r *http.Request) {
 		// return
 		// http.Error(w, "Artist Not Found", http.StatusNotFound)
 		return
-	}
-
-	filtered := []Artist{}
-
-	// Handle search queries
-	searchQuery := r.URL.Query().Get("search")
-	log.Println("Search - Query -> ", searchQuery)
-	if searchQuery != "" {
-		for _, artist := range data {
-			if strings.Contains(strings.ToLower(artist.Name), strings.ToLower(searchQuery)) {
-				filtered = append(filtered, artist)
-			}
-		}
-		data = filtered
 	}
 
 	// Render the homepage with all artists (or filtered results)
@@ -120,6 +108,31 @@ func (h *Handler) HomepageHandler(w http.ResponseWriter, r *http.Request) {
 	if _, err := h.FetchData(url, &data); err != nil {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
+	}
+
+	// Handle search queries
+	searchQuery := r.URL.Query().Get("search")
+	log.Println("This is the quesry", r.URL.Query().Get("search"))
+	log.Println("Received request for search query : ", searchQuery)
+	filtered := []Artist{}
+
+	if searchQuery != "" {
+		log.Println("Search Query is not empty, proceeding with filtering.")
+
+		for _, artist := range data {
+			log.Println("Checking artist:", artist.Name)
+			if strings.Contains(strings.ToLower(artist.Name), strings.ToLower(searchQuery)) {
+				log.Println("Match found:", artist.Name)
+				filtered = append(filtered, artist)
+			} else {
+				log.Println("No match for artist: ", artist.Name)
+			}
+		}
+
+		data = filtered
+		log.Println("Filtered data.", data)
+	} else {
+		log.Println("No search query provided")
 	}
 
 	// Render the homepage with all artists (or filtered results)
