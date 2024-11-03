@@ -13,7 +13,7 @@ func main() {
 		RenderTemplate: api.RenderTemplate,
 	}
 
-	http.HandleFunc("/", h.HomepageHandler)
+	// http.HandleFunc("/", h.HomepageHandler)
 	http.HandleFunc("/artist", h.ArtistsHandler)
 	// http.HandleFunc("/artist/relations/", h.RelationsHandler)
 	// http.HandleFunc("/artist/dates/", h.DatesHandler)

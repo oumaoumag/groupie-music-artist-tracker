@@ -3,8 +3,7 @@ package api
 import (
 	// "encoding/json"
 	// "html/template"
-	"fmt"
-	"log"
+
 	"net/http"
 	"strconv"
 	"strings"
@@ -19,47 +18,47 @@ type DatesAPIResponse struct {
 	Index []Date `json:"index"`
 }
 
-func DatesHandler(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) DatesHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		RenderErrorPage(w, http.StatusMethodNotAllowed, "Method Not Allowed", "Only GET method is supported.")
 		return
-		
+
 	}
 
 	// Get and split the URL path
 	path := r.URL.Path
 	parts := strings.Split(path, "/")
-	log.Printf("parts of split dates URL -> %v", parts)
+	// log.Printf("parts of split dates URL -> %v", parts)
 
 	if len(parts) < 3 {
 		RenderErrorPage(w, http.StatusBadRequest, "Bad Request", "Artist Id not found in url.")
 		return
-		
+
 	}
 
 	artistID, err := strconv.Atoi(parts[3])
 	if err != nil {
 		RenderErrorPage(w, http.StatusBadRequest, "Bad Request", "Invalid artist id.")
 		return
-		
+
 	}
 
 	url := "https://groupietrackers.herokuapp.com/api/dates"
-	data, err := FetchData(url, &DatesAPIResponse{})
+	data, err := h.FetchData(url, &DatesAPIResponse{})
 	if err != nil {
 		RenderErrorPage(w, http.StatusMethodNotAllowed, "Internal Server Error", "Unable to find artist date.")
 		return
-		
+
 	}
 
-	log.Println("Data fetch successful")
+	// log.Println("Data fetch successful")
 
 	// TYpe assertion to convert data to *LocationsAPIResponse
 	apiResponse, ok := data.(*DatesAPIResponse)
 	if !ok {
 		RenderErrorPage(w, http.StatusInternalServerError, "Internal Server Error", "invalid data formata.")
 		return
-		
+
 	}
 
 	var artistData Date
@@ -74,50 +73,8 @@ func DatesHandler(w http.ResponseWriter, r *http.Request) {
 	// If not artist data is found
 	if artistData.ID == 0 {
 		RenderErrorPage(w, http.StatusNotFound, "Artist Not Found", "The artist you are looking for does not exist.")
-       return
-	}
-	RenderTemplate(w, "dates.html", artistData)
-	log.Println("Finished rendering Dates")
-
-}
-
-// This function compares the lengths of the Locations and Dates for the artist with the same ID
-func CompareArtistInfo(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		RenderErrorPage(w, http.StatusMethodNotAllowed, "Method Not Allowed", "Only GET method is supported.")
 		return
 	}
-
-	// Fetch Locations data
-	locationsURL := "https://groupietrackers.herokuapp.com/api/locations"
-	var locationsResponse LocationsAPIResponse
-	_, err := FetchData(locationsURL, &locationsResponse)
-	if err != nil {
-		RenderErrorPage(w, http.StatusInternalServerError, "Internal Server Error", "Unable to fetch artist data.")
-		return
-	}
-
-	// Fetch Dates data
-	datesURL := "https://groupietrackers.herokuapp.com/api/dates"
-	var datesResponse DatesAPIResponse
-	_, err = FetchData(datesURL, &datesResponse)
-	if err != nil {
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	}
-
-	// Now, loop through both responses and compare the lengths of locations and dates for each artist
-	for i := range locationsResponse.Index {
-		artistLocations := locationsResponse.Index[i].Locations
-		artistDates := datesResponse.Index[i].Dates
-
-		// Compare the lengths
-		if len(artistLocations) == len(artistDates) {
-			fmt.Fprintf(w, "Artist ID %d: Number of locations matches the number of concert dates.\n", locationsResponse.Index[i].ID)
-		} else if len(artistLocations) > len(artistDates) {
-			fmt.Fprintf(w, "Artist ID %d: More locations than concert dates.\n", locationsResponse.Index[i].ID)
-		} else {
-			fmt.Fprintf(w, "Artist ID %d: More concert dates than locations.\n", locationsResponse.Index[i].ID)
-		}
-	}
+	h.RenderTemplate(w, "dates.html", artistData)
+	// log.Println("Finished rendering Dates")
 }

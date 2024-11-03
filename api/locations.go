@@ -18,7 +18,7 @@ type LocationsAPIResponse struct {
 	Index []Location `json:"index"`
 }
 
-func LocationsHandler(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) LocationsHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		RenderErrorPage(w, http.StatusMethodNotAllowed, "Method Not Allowed", "Only GET method is supported.")
 		return
@@ -27,7 +27,7 @@ func LocationsHandler(w http.ResponseWriter, r *http.Request) {
 	// Get and split the URL path
 	path := r.URL.Path
 	parts := strings.Split(path, "/")
-	log.Printf("parts of split locations URL -> %v", parts)
+	// log.Printf("parts of split locations URL -> %v", parts)
 
 	if len(parts) < 3 {
 		http.Error(w, "Artist ID not found in URL", http.StatusBadRequest)
@@ -42,7 +42,7 @@ func LocationsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	url := "https://groupietrackers.herokuapp.com/api/locations"
-	data, err := FetchData(url, &LocationsAPIResponse{})
+	data, err := h.FetchData(url, &LocationsAPIResponse{})
 	if err != nil {
 		log.Printf("Error FEtching relations data : %q\n", err)
 		RenderErrorPage(w, http.StatusInternalServerError, "Internal Server Error", "Unable to fetch artist relation.")
@@ -73,6 +73,6 @@ func LocationsHandler(w http.ResponseWriter, r *http.Request) {
         return
 	}
 
-	RenderTemplate(w, "locations.html", artistData)
+	h.RenderTemplate(w, "locations.html", artistData)
 	log.Println("Finished rendering data")
 }

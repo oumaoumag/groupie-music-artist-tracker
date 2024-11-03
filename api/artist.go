@@ -35,19 +35,22 @@ func (h *Handler) ArtistsHandler(w http.ResponseWriter, r *http.Request) {
 	// Get artist ID from the URL path (if any)
 	urlPath := strings.TrimPrefix(r.URL.Path, "/artist/")
 
-	log.Printf("r.URL.Path -> %v\n", r.URL.Path)
-	log.Printf("urlPath -> %v\n", urlPath)
+	// log.Printf("r.URL.Path -> %v\n", r.URL.Path)
+	// log.Printf("urlPath -> %v\n", urlPath)
 
-	artistID, err := strconv.Atoi(urlPath) // Convert to integer if a number
-	if err != nil {
-		RenderErrorPage(w, http.StatusInternalServerError, "Internal Server Error", " 	Wrong ID")
+	var artistID int
+	if urlPath != "" {
+		artistId, err := strconv.Atoi(urlPath) // Convert to integer if a number
+		artistID = artistId
+		if err != nil {
+			RenderErrorPage(w, http.StatusInternalServerError, "Internal Server Error", " 	Wrong ID")
 
-		// http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
+			// http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
+
+		// log.Printf("ArtistId - %d\n", artistID)
 	}
-
-	log.Printf("ArtistId - %d\n", artistID)
-
 	// URL to fetch all artistss
 	url := "https://groupietrackers.herokuapp.com/api/artists"
 	data := []Artist{}
@@ -66,7 +69,7 @@ func (h *Handler) ArtistsHandler(w http.ResponseWriter, r *http.Request) {
 		for _, artist := range data {
 			if artist.ID == artistID {
 
-				log.Printf("Rendering artist for ID: %d\n", artistID)
+				// log.Printf("Rendering artist f?or ID: %d\n", artistID)
 
 				artistData = artist
 
@@ -85,7 +88,7 @@ func (h *Handler) ArtistsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Render the homepage with all artists (or filtered results)
-	h.RenderTemplate(w, "homepage.html", data)
+	// h.RenderTemplate(w, "homepage.html", data)
 }
 
 // homepageHandler: handles requests to the homepagae of the website
@@ -98,7 +101,7 @@ func (h *Handler) HomepageHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Log rendering attempt
-	log.Println("Rendering HomePage - ")
+	// log.Println("Rendering HomePage - ")
 
 	// URL to fetch all artistss
 	url := "https://groupietrackers.herokuapp.com/api/artists"
@@ -112,30 +115,32 @@ func (h *Handler) HomepageHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Handle search queries
 	searchQuery := r.URL.Query().Get("search")
-	log.Println("This is the quesry", r.URL.Query().Get("search"))
-	log.Println("Received request for search query : ", searchQuery)
+	// log.Println("This is the quesry", r.URL.Query().Get("search"))
+	// log.Println("Received request for search query : ", searchQuery)
 	filtered := []Artist{}
 
 	if searchQuery != "" {
-		log.Println("Search Query is not empty, proceeding with filtering.")
+		// log.Println("Search Query is not empty, proceeding with filtering.")
 
 		for _, artist := range data {
-			log.Println("Checking artist:", artist.Name)
+			// log.Println("Checking artist:", artist.Name)
 			if strings.Contains(strings.ToLower(artist.Name), strings.ToLower(searchQuery)) {
-				log.Println("Match found:", artist.Name)
+				// log.Println("Match found:", artist.Name)
 				filtered = append(filtered, artist)
 			} else {
-				log.Println("No match for artist: ", artist.Name)
+				// log.Println("No match for artist: ", artist.Name)
 			}
 		}
 
 		data = filtered
-		log.Println("Filtered data.", data)
+		// log.Println("Filtered data.", data)
 	} else {
-		log.Println("No search query provided")
+		// log.Println("No search query provided")
 	}
 
 	// Render the homepage with all artists (or filtered results)
 	h.RenderTemplate(w, "homepage.html", data)
+	log.Printf("\nData -> %v\n\n", data)
+	log.Println(data)
 	log.Println("Finished handling request for homepage")
 }
