@@ -23,6 +23,7 @@ func mockRenderTemplate(w http.ResponseWriter, tmpl string, data interface{}) {
 // Test function for ArtistsHandler
 func TestArtistsHandler(t *testing.T) {
 	t.Parallel()
+	
 	handler := &Handler{
 		FetchData:      mockFetchData,
 		RenderTemplate: mockRenderTemplate,

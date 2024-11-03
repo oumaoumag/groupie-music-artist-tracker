@@ -35,6 +35,8 @@ func mockFetchDate(url string, target interface{}) (interface{}, error) {
 
 // Test DatesHandler
 func TestDatesHandler(t *testing.T) {
+	t.Parallel()
+
 	h := &Handler{
 		RenderTemplate:  mockRenderTemplates,
 		// RenderErrorPage: mockRenderErrorPage,

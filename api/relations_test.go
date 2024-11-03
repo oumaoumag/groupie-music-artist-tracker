@@ -29,6 +29,8 @@ func mockFetchDataForRelations(url string, target interface{}) (interface{}, err
 
 // Test RelationsHandler
 func TestRelationsHandler(t *testing.T) {
+	t.Parallel()
+	
 	h := &Handler{
 		RenderTemplate: mockRenderTemplateForRelations,
 		FetchData:      mockFetchDataForRelations,

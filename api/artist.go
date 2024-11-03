@@ -69,7 +69,7 @@ func (h *Handler) ArtistsHandler(w http.ResponseWriter, r *http.Request) {
 		for _, artist := range data {
 			if artist.ID == artistID {
 
-				// log.Printf("Rendering artist f?or ID: %d\n", artistID)
+				log.Printf("Rendering artist f?or ID: %d\n", artistID)
 
 				artistData = artist
 
@@ -88,7 +88,7 @@ func (h *Handler) ArtistsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Render the homepage with all artists (or filtered results)
-	// h.RenderTemplate(w, "homepage.html", data)
+	h.RenderTemplate(w, "homepage.html", data)
 }
 
 // homepageHandler: handles requests to the homepagae of the website

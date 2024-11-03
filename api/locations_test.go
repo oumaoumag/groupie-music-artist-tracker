@@ -35,6 +35,8 @@ func mockFetchDataForLocations(url string, target interface{}) (interface{}, err
 
 // Test LocationsHandler
 func TestLocationsHandler(t *testing.T) {
+	t.Parallel()
+	
 	h := &Handler{
 		RenderTemplate:  mockRenderTemplat,
 		// RenderErrorPage: mockRenderErrorPage,

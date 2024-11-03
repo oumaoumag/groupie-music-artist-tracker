@@ -7,7 +7,7 @@ body {
     flex-direction: column;
     min-height: 100vh;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;
     line-height: 1.8;
 }
 
@@ -87,13 +87,13 @@ nav ul li a:hover {
 .tour-dates-table th {
     background-color: #4B0082;
     color: white;
-    font-size: 1.6rem;
+    font-size: 1.8rem;
 }
 
 .tour-dates-table tbody {
     background-color: rgba(255, 255, 255, 0.1);
     color: #fff;
-    font-size: 1.4rem;
+    font-size: 1.6rem;
 }
 
 /* Tour Table Locations */
@@ -186,7 +186,7 @@ nav ul li a:hover {
 .btn {
     background-color: #f44336;
     color: white;
-    padding: 15px 25px;
+    padding: 10px 20px;
     text-decoration: none;
     border-radius: 5px;
     font-size: 1.2rem;
@@ -194,6 +194,16 @@ nav ul li a:hover {
 }
 .btn:hover {
     background-color: #d32f2f;
+}
+
+/* Updated Search Input Styles */
+.search-input {
+    width: 300px; /* Increase the width of the search input */
+    padding: 10px 15px; /* Add padding for better spacing */
+    font-size: 1.2rem;
+    border-radius: 5px;
+    margin-right: 10px; /* Space between input and button */
+    border: 1px solid #ddd;
 }
 footer.footer {
     background-color: #333;
