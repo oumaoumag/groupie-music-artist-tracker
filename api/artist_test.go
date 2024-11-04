@@ -79,39 +79,39 @@ func TestArtistsHandler(t *testing.T) {
 		{
 			name:           "Get All Artists",
 			method:         "GET",
-			path:          "/artist/",
+			path:           "/artist/",
 			expectedStatus: http.StatusOK,
 			expectedArtist: 0,
 		},
 		{
 			name:           "Get Single Artist",
 			method:         "GET",
-			path:          "/artist/1",
+			path:           "/artist/1",
 			expectedStatus: http.StatusOK,
 			expectedArtist: 1,
 		},
 		{
 			name:           "Invalid Method",
 			method:         "POST",
-			path:          "/artist/",
+			path:           "/artist/",
 			expectedStatus: http.StatusMethodNotAllowed,
 		},
 		{
 			name:           "Invalid Artist ID",
 			method:         "GET",
-			path:          "/artist/invalid",
+			path:           "/artist/invalid",
 			expectedStatus: http.StatusInternalServerError,
 		},
 		{
 			name:           "Non-existent Artist",
 			method:         "GET",
-			path:          "/artist/999",
+			path:           "/artist/999",
 			expectedStatus: http.StatusNotFound,
 		},
 		{
 			name:           "Search Artists",
 			method:         "GET",
-			path:          "/artist/",
+			path:           "/artist/",
 			searchQuery:    "test",
 			expectedStatus: http.StatusOK,
 		},
@@ -125,7 +125,7 @@ func TestArtistsHandler(t *testing.T) {
 				q.Add("search", tt.searchQuery)
 				req.URL.RawQuery = q.Encode()
 			}
-			
+
 			w := httptest.NewRecorder()
 			ArtistsHandler(w, req)
 
@@ -192,7 +192,7 @@ func TestHomepageHandler(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			req := httptest.NewRequest(tt.method, "/", nil)
 			w := httptest.NewRecorder()
-			
+
 			HomepageHandler(w, req)
 
 			if w.Code != tt.expectedStatus {
