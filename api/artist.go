@@ -33,10 +33,10 @@ func (h *Handler) ArtistsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Get artist ID from the URL path (if any)
-	urlPath := strings.TrimPrefix(r.URL.Path, "/artist/")
+	urlPath := strings.TrimPrefix(r.URL.Path, "/artist/view/")
 
-	// log.Printf("r.URL.Path -> %v\n", r.URL.Path)
-	// log.Printf("urlPath -> %v\n", urlPath)
+	log.Printf("r.URL.Path -> %v\n", r.URL.Path)
+	log.Printf("urlPath -> %v\n", urlPath)
 
 	var artistID int
 	if urlPath != "" {
@@ -109,18 +109,15 @@ func (h *Handler) HomepageHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Fetch artist data
 	if _, err := h.FetchData(url, &data); err != nil {
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		RenderErrorPage(w, http.StatusInternalServerError, "Internal Server Error", "Data Unavailable")
 		return
 	}
 
 	// Handle search queries
 	searchQuery := r.URL.Query().Get("search")
-	// log.Println("This is the quesry", r.URL.Query().Get("search"))
-	// log.Println("Received request for search query : ", searchQuery)
 	filtered := []Artist{}
 
 	if searchQuery != "" {
-		// log.Println("Search Query is not empty, proceeding with filtering.")
 
 		for _, artist := range data {
 			// log.Println("Checking artist:", artist.Name)
@@ -128,19 +125,16 @@ func (h *Handler) HomepageHandler(w http.ResponseWriter, r *http.Request) {
 				// log.Println("Match found:", artist.Name)
 				filtered = append(filtered, artist)
 			} else {
-				// log.Println("No match for artist: ", artist.Name)
+				log.Println("No match for artist: ", artist.Name)
 			}
 		}
 
 		data = filtered
-		// log.Println("Filtered data.", data)
 	} else {
-		// log.Println("No search query provided")
+		log.Println("No search query provided")
 	}
 
 	// Render the homepage with all artists (or filtered results)
 	h.RenderTemplate(w, "homepage.html", data)
-	log.Printf("\nData -> %v\n\n", data)
-	log.Println(data)
 	log.Println("Finished handling request for homepage")
 }
