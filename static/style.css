@@ -1,4 +1,10 @@
 /* Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
     background: linear-gradient(to bottom right, #07050a, #190087);
     font-family: Arial, sans-serif;
@@ -17,6 +23,10 @@ body {
     color: #fff;
     text-align: center;
     padding: 20px;
+}
+
+.footer {
+    margin-top: auto; /* Pushes the footer to the bottom if there’s little content */
 }
 
 /* Navigation Styles */
@@ -163,11 +173,6 @@ nav ul li a:hover {
     background-color: #6A0DAD;
 }
 
-/* Footer */
-.footer {
-    margin-top: auto;
-}
-
 /* Error Page Styles */
 .error-section {
     max-width: 600px;
@@ -205,17 +210,13 @@ nav ul li a:hover {
     margin-right: 10px; /* Space between input and button */
     border: 1px solid #ddd;
 }
+
 footer.footer {
     background-color: #333;
     color: white;
     text-align: center;
     padding: 10px;
-    position: absolute;
-    bottom: 0;
     width: 100%;
-}
-footer.footer p {
-    margin: 0;
 }
 
 /* Responsive Styles */
