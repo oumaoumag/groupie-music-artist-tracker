@@ -98,7 +98,12 @@ func (h *Handler) HomepageHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return
-	}
+	} 
+	// else {
+	// 	RenderErrorPage(w, http.StatusPage, "Internal Server Error", "Data Unavailable")
+	// 	return
+
+	// }
 
 	// Log rendering attempt
 	// log.Println("Rendering HomePage - ")
