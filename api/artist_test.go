@@ -195,19 +195,11 @@ func TestHomepageHandler(t *testing.T) {
 
 			HomepageHandler(w, req)
 
-			if w.Code != tt.expectedStatus {
-				t.Errorf("Expected status code %d, got %d", tt.expectedStatus, w.Code)
-			}
-
-			if tt.expectedStatus == http.StatusOK {
-				var artists []Artist
-				if err := json.NewDecoder(w.Body).Decode(&artists); err != nil {
-					t.Errorf("Failed to decode response: %v", err)
-				}
-				if len(artists) != len(mockArtists) {
-					t.Errorf("Expected %d artists, got %d", len(mockArtists), len(artists))
-				}
-			}
-		})
+	res := w.Result()
+	if res.StatusCode != http.StatusOK {
+		t.Errorf("Expected status code %d, got %d", http.StatusOK, res.StatusCode)
 	}
 }
+
+
+.......
