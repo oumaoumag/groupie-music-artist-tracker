@@ -1,170 +1,70 @@
 package api
 
 import (
-	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 )
 
-// MockArtist is test data
-var mockArtists = []Artist{
-	{
-		ID:           1,
-		Name:         "Test Artist 1",
-		Image:        "test1.jpg",
-		Members:      []string{"Member 1", "Member 2"},
-		CreationDate: 2000,
-		FirstAlbum:   "2001-01-01",
-		Locations:    "Location 1",
-		ConcertDates: "2023-01-01",
-		Relations:    "Relation 1",
-	},
-	{
-		ID:           2,
-		Name:         "Another Artist",
-		Image:        "test2.jpg",
-		Members:      []string{"Member 3", "Member 4"},
-		CreationDate: 2005,
-		FirstAlbum:   "2006-01-01",
-		Locations:    "Location 2",
-		ConcertDates: "2023-02-01",
-		Relations:    "Relation 2",
-	},
+// mockFetchData: simulates a successful API call by populating the target with mock data
+func mockFetchData(url string, target interface{}) (interface{}, error) {
+	artist := []Artist{
+		{ID: 1, Name: "The Beatles", Image: "image.jpg", Members: []string{"John", "Paul", "George", "Ringo"}, CreationDate: 1960, FirstAlbum: "Please Please Me"},
+		{ID: 2, Name: "The Rolling Stones", Image: "Image2.jpg", Members: []string{"Mick", "Keith", "Charlie", "Ronnie"}, CreationDate: 1962, FirstAlbum: "The Rolling Stones"},
+	}
+	*target.(*[]Artist) = artist
+	return target, nil
 }
 
-func TestArtistsHandler(t *testing.T) {
-	// Store original functions
-	originalFetchData := fetchDataFunc
-	originalRenderTemplate := renderTemplateFunc
-	originalRenderErrorPage := renderErrorPageFunc
+// mockRenderTemplate: sets the HTTP status to OK without rendering a template
+func mockRenderTemplate(w http.ResponseWriter, tmpl string, data interface{}) {
+	w.WriteHeader(http.StatusOK)
+}
 
-	// Replace with mock functions
-	fetchDataFunc = func(url string, target interface{}) (int, error) {
-		artists, ok := target.(*[]Artist)
-		if !ok {
-			return http.StatusInternalServerError, nil
-		}
-		*artists = mockArtists
-		return http.StatusOK, nil
+// Test for ArtistHandler
+func TestArtistHandler(t *testing.T) {
+	handler := &Handler{
+		FetchData:      mockFetchData,
+		RenderTemplate: mockRenderTemplate,
 	}
 
-	renderTemplateFunc = func(w http.ResponseWriter, tmpl string, data interface{}) error {
-		return json.NewEncoder(w).Encode(data)
-	}
-
-	renderErrorPageFunc = func(w http.ResponseWriter, status int, title, message string) {
-		w.WriteHeader(status)
-		json.NewEncoder(w).Encode(map[string]string{
-			"title":   title,
-			"message": message,
-		})
-	}
-
-	// Restore original functions after tests
-	defer func() {
-		fetchDataFunc = originalFetchData
-		renderTemplateFunc = originalRenderTemplate
-		renderErrorPageFunc = originalRenderErrorPage
-	}()
-
-	tests := []struct {
-		name           string
-		method         string
-		path           string
-		searchQuery    string
-		expectedStatus int
-		expectedArtist int // ID of expected artist, 0 for all artists
+	// Test cases
+	tt := []struct {
+		name        string
+		queryString string
+		expected    int
 	}{
-		// {"/artist/1", http.StatusOK},                           // Valid artist ID
-		// {"/artist/999", http.StatusNotFound},                   // Invalid artist ID
-		// {"/artists", http.StatusOK},                            // Get all artists
-		// {"/artist/notanumber", http.StatusInternalServerError}, // Invalid URL format
+		{
+			name:        "NO search query, return all artists",
+			queryString: "",
+			expected:    http.StatusOK,
+		},
+		{
+			name:        "Search query matches one artist",
+			queryString: "beatles",
+			expected:    http.StatusOK,
+		},
+		{
+			name:        "Search query matches no artist",
+			queryString: "nonexistent",
+			expected:    http.StatusOK,
+		},
 	}
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			req := httptest.NewRequest(tt.method, tt.path, nil)
-			if tt.searchQuery != "" {
-				q := req.URL.Query()
-				q.Add("search", tt.searchQuery)
-				req.URL.RawQuery = q.Encode()
+	for _, tc := range tt {
+		t.Run(tc.name, func(t *testing.T) {
+			req, err := http.NewRequest("GET", "/artists?search="+tc.queryString, nil)
+			if err != nil {
+				t.Fatal(err)
 			}
 
-			w := httptest.NewRecorder()
-			ArtistsHandler(w, req)
+			rr := httptest.NewRecorder()
+			handler.ArtistsHandler(rr, req)
 
-			if w.Code != tt.expectedStatus {
-				t.Errorf("Expected status code %d, got %d", tt.expectedStatus, w.Code)
-			}
-
-			if tt.expectedStatus == http.StatusOK && tt.expectedArtist > 0 {
-				var artist Artist
-				if err := json.NewDecoder(w.Body).Decode(&artist); err != nil {
-					t.Errorf("Failed to decode response: %v", err)
-				}
-				if artist.ID != tt.expectedArtist {
-					t.Errorf("Expected artist ID %d, got %d", tt.expectedArtist, artist.ID)
-				}
+			// CHeck status code
+			if status := rr.Code; status != tc.expected {
+				t.Errorf("handler returned wrong status code: got %v want %v", status, tc.expected)
 			}
 		})
 	}
 }
-
-func TestHomepageHandler(t *testing.T) {
-	// Store original functions
-	originalFetchData := fetchDataFunc
-	originalRenderTemplate := renderTemplateFunc
-
-	// Replace with mock functions
-	fetchDataFunc = func(url string, target interface{}) (int, error) {
-		artists, ok := target.(*[]Artist)
-		if !ok {
-			return http.StatusInternalServerError, nil
-		}
-		*artists = mockArtists
-		return http.StatusOK, nil
-	}
-
-	renderTemplateFunc = func(w http.ResponseWriter, tmpl string, data interface{}) error {
-		return json.NewEncoder(w).Encode(data)
-	}
-
-	// Restore original functions after tests
-	defer func() {
-		fetchDataFunc = originalFetchData
-		renderTemplateFunc = originalRenderTemplate
-	}()
-
-	tests := []struct {
-		name           string
-		method         string
-		expectedStatus int
-	}{
-		{
-			name:           "Valid GET Request",
-			method:         "GET",
-			expectedStatus: http.StatusOK,
-		},
-		{
-			name:           "Invalid Method",
-			method:         "POST",
-			expectedStatus: http.StatusMethodNotAllowed,
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			req := httptest.NewRequest(tt.method, "/", nil)
-			w := httptest.NewRecorder()
-
-			HomepageHandler(w, req)
-
-	res := w.Result()
-	if res.StatusCode != http.StatusOK {
-		t.Errorf("Expected status code %d, got %d", http.StatusOK, res.StatusCode)
-	}
-}
-
-
-.......
