@@ -94,11 +94,15 @@ func (h *Handler) ArtistsHandler(w http.ResponseWriter, r *http.Request) {
 // homepageHandler: handles requests to the homepagae of the website
 func (h *Handler) HomepageHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("Received request for homepage")
+	if r.URL.Path != "/" && r.URL.Path != "/artist/view" && r.URL.Path != "/artist/relations/" && r.URL.Path != "/artist/dates/" && r.URL.Path != "/artist/locations/" {
+		RenderErrorPage(w, http.StatusNotFound, "Page Not Found", "Invalid Path.")
+		return
+	}
 
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return
-	} 
+	}
 	// else {
 	// 	RenderErrorPage(w, http.StatusPage, "Internal Server Error", "Data Unavailable")
 	// 	return
