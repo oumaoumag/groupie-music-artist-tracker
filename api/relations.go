@@ -29,13 +29,13 @@ func (h *Handler) RelationsHandler(w http.ResponseWriter, r *http.Request) {
 
 	// The artist ID is the third element in the path (e.g., "artist/1/relations")
 	if len(parts) < 3 {
-		http.Error(w, "Artist ID not found in URL", http.StatusBadRequest)
+		RenderErrorPage(w, http.StatusBadRequest, "Not Found", "Artist ID not found in URL")
 		return
 	}
 
 	artistID, err := strconv.Atoi(parts[3])
 	if err != nil {
-		http.Error(w, "Invalid artist ID", http.StatusBadRequest)
+		RenderErrorPage(w, http.StatusBadRequest, "Invalid artist ID", "Incorrect Artist ID")
 		return
 	}
 
@@ -43,7 +43,7 @@ func (h *Handler) RelationsHandler(w http.ResponseWriter, r *http.Request) {
 	data, err := h.FetchData(url, &DatesLocationsAPIResponse{})
 	if err != nil {
 		log.Printf("Error Fetching relations data : %q\n", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		RenderErrorPage(w, http.StatusInternalServerError, "Internal Server Error", "Check your Connection")
 		return
 	}
 
@@ -52,7 +52,7 @@ func (h *Handler) RelationsHandler(w http.ResponseWriter, r *http.Request) {
 	// Type assertion to convert data to *DatesLocationsAPIResponse
 	apiResponse, ok := data.(*DatesLocationsAPIResponse)
 	if !ok {
-		http.Error(w, "Invalid data format", http.StatusInternalServerError)
+		RenderErrorPage(w, http.StatusInternalServerError, "Invalid data format", "Error Displaying Data")
 		return
 	}
 
@@ -67,7 +67,7 @@ func (h *Handler) RelationsHandler(w http.ResponseWriter, r *http.Request) {
 
 	// If no artist data is found
 	if artistData.ID == 0 {
-		http.Error(w, "Artist not found", http.StatusNotFound)
+		RenderErrorPage(w, http.StatusNotFound, "Artist not found", "Check The Artist ID")
 		return
 	}
 
