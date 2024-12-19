@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"fmt"
 )
 
 type Artist struct {
@@ -23,6 +24,38 @@ type Artist struct {
 type Handler struct {
 	FetchData      func(url string, target interface{}) (interface{}, error)
 	RenderTemplate func(w http.ResponseWriter, tmpl string, data interface{})
+}
+
+// searchArtist checks if an artist matches the search query
+func searchArtist(artist Artist, query string) (bool, string) {
+	// Convert searchable fields to lowercase
+	artistName := strings.ToLower(artist.Name)
+	firstAlbum := strings.ToLower(artist.FirstAlbum)
+	creationDate := strconv.Itoa(artist.CreationDate)
+	
+	// Check artist name
+	if strings.Contains(artistName, query) {
+		return true, fmt.Sprintf("Match found in artist name: %s", artist.Name)
+	}
+	
+	// Check first album
+	if strings.Contains(firstAlbum, query) {
+		return true, fmt.Sprintf("Match found in first album: %s", artist.FirstAlbum)
+	}
+	
+	// Check creation date
+	if strings.Contains(creationDate, query) {
+		return true, fmt.Sprintf("Match found in creation date: %d", artist.CreationDate)
+	}
+	
+	// Check members
+	for _, member := range artist.Members {
+		if strings.Contains(strings.ToLower(member), query) {
+			return true, fmt.Sprintf("Match found in member name: %s", member)
+		}
+	}
+	
+	return false, ""
 }
 
 // ArtistsHandler handles the request to fetch artist data or filter by search query
@@ -91,10 +124,10 @@ func (h *Handler) ArtistsHandler(w http.ResponseWriter, r *http.Request) {
 	h.RenderTemplate(w, "homepage.html", data)
 }
 
-// homepageHandler: handles requests to the homepagae of the website
+// homepageHandler: handles requests to the homepage of the website
 func (h *Handler) HomepageHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("Received request for homepage")
-	if r.URL.Path != "/" && r.URL.Path != "/artist/view" && r.URL.Path != "/artist/relations/" && r.URL.Path != "/artist/dates/" && r.URL.Path != "/artist/locations/" {
+	if r.URL.Path != "/" {
 		RenderErrorPage(w, http.StatusNotFound, "Page Not Found", "Invalid Path.")
 		return
 	}
@@ -103,16 +136,8 @@ func (h *Handler) HomepageHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	// else {
-	// 	RenderErrorPage(w, http.StatusPage, "Internal Server Error", "Data Unavailable")
-	// 	return
 
-	// }
-
-	// Log rendering attempt
-	// log.Println("Rendering HomePage - ")
-
-	// URL to fetch all artistss
+	// URL to fetch all artists
 	url := "https://groupietrackers.herokuapp.com/api/artists"
 	data := []Artist{}
 
@@ -123,21 +148,20 @@ func (h *Handler) HomepageHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Handle search queries
-	searchQuery := r.URL.Query().Get("search")
+	searchQuery := strings.ToLower(r.URL.Query().Get("search"))
 	filtered := []Artist{}
 
 	if searchQuery != "" {
-
+		log.Printf("Search query received: %q\n", searchQuery)
+		
 		for _, artist := range data {
-			// log.Println("Checking artist:", artist.Name)
-			if strings.Contains(strings.ToLower(artist.Name), strings.ToLower(searchQuery)) {
-				// log.Println("Match found:", artist.Name)
+			if matches, reason := searchArtist(artist, searchQuery); matches {
+				log.Println(reason)
 				filtered = append(filtered, artist)
-			} else {
-				log.Println("No match for artist: ", artist.Name)
 			}
 		}
 
+		log.Printf("Search completed. Found %d matches\n", len(filtered))
 		data = filtered
 	} else {
 		log.Println("No search query provided")
