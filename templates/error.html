@@ -4,23 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Error {{.Code}} - {{.Message}}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="/static/style.css">
-   
 </head>
-<body>
+<body class="error-page">
     <header class="header">
-        <h1>Error: {{.Code}}</h1>
-        
+        <h1><i class="fas fa-exclamation-circle"></i> Error {{.Code}}</h1>
+        <a href="/" class="home-button" title="Home">
+            <i class="fas fa-home"></i>
+        </a>
     </header>
 
     <section class="error-section">
         <h2>{{.Message}}</h2>
         <p>{{.Description}}</p>
-        <a href="/" class="btn">Go Back to Home</a>
+        <a href="/" class="btn">
+            <i class="fas fa-home"></i> Back to Home
+        </a>
     </section>
 
     <footer class="footer">
-        <p>&copy; 2024 Groupie-Tracker. All rights reserved.</p>
+        <p><i class="far fa-copyright"></i> 2024 Groupie-Tracker. All rights reserved.</p>
+        <div class="social-links">
+            <a href="#" aria-label="Follow us on Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" aria-label="Follow us on Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" aria-label="Follow us on Facebook"><i class="fab fa-facebook"></i></a>
+        </div>
     </footer>
 </body>
 </html>
