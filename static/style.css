@@ -6,59 +6,361 @@
 }
 
 body {
-    background: linear-gradient(to bottom right, #07050a, #190087);
-    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #fff;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
     margin: 0;
-    font-size: 1.5rem;
-    line-height: 1.8;
+    font-size: 16px;
+    line-height: 1.6;
 }
 
-/* Header & Footer */
-.header, .footer {
-    background-color: rgba(0, 0, 0, 0.5);
-    color: #fff;
+/* Header Styles */
+.header {
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+    padding: 1.5rem;
+    position: relative;
     text-align: center;
-    padding: 20px;
+    margin-bottom: 1rem;
 }
 
-.footer {
-    margin-top: auto; /* Pushes the footer to the bottom if there's little content */
-}
-
-/* Navigation Styles */
-nav ul {
-    list-style-type: none;
+.header h1 {
+    font-size: 2.5rem;
     margin: 0;
-    padding: 0;
-}
-nav ul li {
-    display: inline;
-    padding: 0 20px;
-}
-nav ul li a {
-    text-decoration: none;
     color: #fff;
-    font-weight: bold;
 }
-nav ul li a:hover {
-    color: #007BFF;
+
+.header h1 i {
+    margin-right: 0.5rem;
+}
+
+/* Navigation Buttons */
+.back-button {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.back-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.back-button i {
+    font-size: 1.2rem;
+}
+
+.home-button {
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.home-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.home-button i {
+    font-size: 1.2rem;
 }
 
 /* Welcome Section */
 .welcome-section {
-    background-image: url('/static/b3.jpeg');
+    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/static/b3.jpeg');
     background-size: contain;
     background-position: center;
-    background-attachment: fixed;
-    padding: 50px;
+    padding: 4rem 2rem;
     text-align: center;
+    flex: 1;
+}
+
+.text-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.text-content h2 {
     font-size: 3rem;
-    font-weight: bold;
-    color: #fff;
+    margin-bottom: 1rem;
+    background: linear-gradient(45deg, #00f2fe, #4facfe);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.search-input {
+    padding: 1rem 1.5rem;
+    border: none;
+    border-radius: 25px;
+    width: 100%;
+    max-width: 400px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 1rem;
+    backdrop-filter: blur(5px);
+    margin: 1rem 0;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 15px rgba(79, 172, 254, 0.5);
+}
+
+.search-input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Artists Grid */
+.artists-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(200px, 1fr));
+    gap: 1rem;
+    padding: 1rem;
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+    flex: 1;
+}
+
+.artist-card {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    width: 100%;
+    max-width: 100%;
+    backdrop-filter: blur(5px);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-decoration: none;
+    color: white;
+}
+
+.artist-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.artist-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.artist-card:hover img {
+    transform: scale(1.05);
+}
+
+.artist-card h2 {
+    padding: 0.8rem;
+    font-size: 1rem;
+    text-align: center;
+}
+
+/* Tables Styling */
+.tour-dates-table {
+    width: 90%;
+    max-width: 1200px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-collapse: collapse;
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 2rem auto;
+    backdrop-filter: blur(5px);
+}
+
+.tour-dates-table th {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: white;
+    padding: 1rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-align: left;
+}
+
+.tour-dates-table td {
+    padding: 1rem;
+    color: white;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tour-dates-table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.tour-dates-table ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.tour-dates-table li {
+    padding: 0.3rem 0;
+}
+
+/* Locations and Dates Labels */
+.location-label, .date-label {
+    background: linear-gradient(45deg, #00f2fe, #4facfe);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    display: inline-block;
+    margin: 0.2rem;
+}
+
+.date-label {
+    background: linear-gradient(45deg, #4facfe, #00f2fe);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+    .artists-grid {
+        grid-template-columns: repeat(3, minmax(200px, 1fr));
+    }
+}
+
+@media (max-width: 900px) {
+    .artists-grid {
+        grid-template-columns: repeat(2, minmax(200px, 1fr));
+    }
+}
+
+@media (max-width: 600px) {
+    .artists-grid {
+        grid-template-columns: 1fr;
+        padding: 0.5rem;
+    }
+    
+    .artist-card img {
+        height: 160px;
+    }
+}
+
+/* Artist Details Page */
+.artist-details {
+    padding: 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.artist-details .artist-card {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2rem;
+    text-align: center;
+}
+
+.artist-details img {
+    max-width: 400px;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+}
+
+.artist-details p {
+    margin: 1rem 0;
+    font-size: 1.1rem;
+}
+
+/* Buttons */
+.btn, .artist-button {
+    background: linear-gradient(45deg, #00f2fe, #4facfe);
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 25px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    margin: 0.5rem;
+}
+
+.btn:hover, .artist-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2rem;
+    }
+    
+    .text-content h2 {
+        font-size: 2rem;
+    }
+    
+    .artists-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        padding: 1rem;
+    }
+    
+    .artist-details img {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        font-size: 14px;
+    }
+    
+    .header {
+        padding: 1rem;
+    }
+    
+    .welcome-section {
+        padding: 2rem 1rem;
+    }
+    
+    .search-input {
+        padding: 0.8rem 1.2rem;
+    }
+    
+    .artist-card h2 {
+        font-size: 1.2rem;
+    }
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.artist-card {
+    animation: fadeIn 0.5s ease-out;
 }
 
 /* Tour Section */
@@ -68,6 +370,7 @@ nav ul li a:hover {
     align-items: center;
     flex-grow: 1;
     padding: 40px 0;
+    flex: 1;
 }
 
 .tour-grid {
@@ -80,7 +383,7 @@ nav ul li a:hover {
 /* Tour Table Styles */
 .tour-dates-table {
     width: 80%;
-    background-color: rgba(181, 175, 214, 0.689);
+    background: rgba(181, 175, 214, 0.689);
     border-collapse: collapse;
     text-align: left;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -95,13 +398,13 @@ nav ul li a:hover {
 }
 
 .tour-dates-table th {
-    background-color: #4B0082;
+    background: linear-gradient(45deg, #4facfe, #00f2fe);
     color: white;
     font-size: 1.8rem;
 }
 
 .tour-dates-table tbody {
-    background-color: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.1);
     color: #fff;
     font-size: 1.6rem;
 }
@@ -115,40 +418,6 @@ nav ul li a:hover {
     padding: 40px 20px;
 }
 
-/* Artists Grid Styles */
-.artists-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-    padding: 20px;
-    justify-items: center;
-}
-
-.artist-card {
-    background-color: rgba(181, 175, 214, 0.689);
-    border-radius: 10px;
-    width: 550px;
-    margin: 10px;
-    text-align: center;
-    transition: transform 0.3s;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.artist-card img {
-    width: 100%;
-    border-radius: 8px 8px 0 0;
-}
-
-.artist-card:hover {
-    transform: scale(1.05);
-}
-
-.artist-card p {
-    color: #fff;
-    font-size: 1.6rem;
-    font-weight: bold;
-}
-
 /* Centered Artist Card */
 .centered {
     margin: 0 auto;
@@ -157,66 +426,42 @@ nav ul li a:hover {
     align-items: center;
 }
 
-/* Button Styles */
-.artist-button {
-    background-color: #4B0082;
-    color: #fff;
-    padding: 15px 20px;
-    border: none;
-    border-radius: 25px;
-    cursor: pointer;
-    font-size: 1.4rem;
-    margin: 10px;
-    transition: background-color 0.3s ease;
-}
-.artist-button:hover {
-    background-color: #6A0DAD;
-}
-
 /* Error Page Styles */
 .error-section {
     max-width: 600px;
-    margin: 50px auto;
+    margin: auto;
     text-align: center;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 2rem;
 }
+
 .error-section h2 {
     font-size: 2rem;
     color: #f44336;
-    margin-bottom: 20px;
+    margin-bottom: 1.5rem;
 }
+
 .error-section p {
     font-size: 1.2rem;
-    margin-bottom: 40px;
-}
-.btn {
-    background-color: #f44336;
-    color: white;
-    padding: 10px 20px;
-    text-decoration: none;
-    border-radius: 5px;
-    font-size: 1.2rem;
-    transition: background-color 0.3s;
-}
-.btn:hover {
-    background-color: #d32f2f;
+    margin-bottom: 2rem;
+    color: #fff;
 }
 
-/* Updated Search Input Styles */
-.search-input {
-    width: 300px;
-    padding: 10px 15px;
-    font-size: 1.2rem;
-    border-radius: 5px;
-    margin-right: 10px;
-    border: 1px solid #ddd;
+.error-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
-footer.footer {
-    background-color: #333;
-    color: white;
-    text-align: center;
-    padding: 10px;
-    width: 100%;
+.error-page .header {
+    margin-bottom: 0;
+}
+
+.error-page .footer {
+    margin-top: auto;
 }
 
 /* Ultra-Specific Mobile Device Responsiveness */
@@ -389,4 +634,81 @@ footer.footer {
         font-size: 1rem;
         padding: 12px 20px;
     }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .features-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .feature-card {
+        padding: 1.5rem;
+    }
+
+    nav ul {
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .feature-card i {
+        font-size: 2rem;
+    }
+
+    .feature-card h3 {
+        font-size: 1.3rem;
+    }
+}
+
+/* Footer Styles */
+.footer {
+    background-color: rgba(0, 0, 0, 0.7);
+    text-align: center;
+    padding: 1.5rem;
+    margin-top: 2rem;
+    width: 100%;
+    position: relative;
+    bottom: 0;
+}
+
+.footer p {
+    margin: 0 0 1rem 0;
+    color: white;
+}
+
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 0.5rem;
+}
+
+.social-links a {
+    color: white;
+    font-size: 1.2rem;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.social-links a:hover {
+    color: #4facfe;
+}
+
+/* Ensure the body takes up full height for footer positioning */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Main content should take up remaining space */
+main, .welcome-section, .artists-grid, .tour-info {
+    flex: 1;
+}
+
+/* Smooth Scroll Behavior */
+html {
+    scroll-behavior: smooth;
 }
