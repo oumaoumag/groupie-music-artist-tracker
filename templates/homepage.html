@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Explore your favorite artists, their tours, and more with Groupie Tracker">
+    <title>Groupie Tracker - Music Artist Explorer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+</head>
+<body>
+    <header class="header">
+        <h1><i class="fas fa-music"></i> Groupie Tracker</h1>
+    </header>
+    
+    <section class="welcome-section">
+        <div class="text-content">
+            <h2>Discover Your Favorite Artists</h2>
+            <p>Explore concert dates, locations, and everything about your favorite musicians.</p>
+            <form method="GET" action="/" class="search-form">
+                <div class="search-container">
+                    <input type="text" 
+                           name="search" 
+                           placeholder="Search artists..." 
+                           class="search-input"
+                           aria-label="Search artists">
+                    <button type="submit" class="btn">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <section class="artists-grid">
+        {{range .}}
+        <a href="/artist/view/{{.ID}}" class="artist-card">
+            <img src="{{.Image}}" alt="{{.Name}}" loading="lazy">
+            <h2>{{.Name}}</h2>
+        </a>
+        {{end}}
+    </section>
+
+    <footer class="footer">
+        <p><i class="far fa-copyright"></i> 2024 Groupie-Tracker. All rights reserved.</p>
+        <div class="social-links">
+            <a href="https://github.com/garveyshah" target="_blank" aria-label="Ouma's GitHub Profile"><i class="fab fa-github"></i> Ouma</a>
+            <a href="https://github.com/steodhiambo" target="_blank" aria-label="Steve's GitHub Profile"><i class="fab fa-github"></i> Stephen</a>
+        </div>
+    </footer>
+</body>
+</html>

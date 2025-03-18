@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Detailed information about {{.Name}} - tours, dates, and more">
+    <title>{{.Name}} - Artist Information</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+</head>
+<body>
+    <header class="header">
+        <h1><i class="fas fa-user-circle"></i> {{.Name}}</h1>
+        <a href="/" class="home-button" title="Home">
+            <i class="fas fa-home"></i>
+        </a>
+        <a href="javascript:history.back()" class="back-button" title="Go Back">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+    </header>
+
+    <section class="artist-details">
+        <div class="artist-card centered">
+            <img src="{{.Image}}" alt="{{.Name}}" loading="lazy">
+            
+            <div class="artist-info">
+                <p><i class="fas fa-calendar-plus"></i> <strong>Formation Date:</strong> {{.CreationDate}}</p>
+                <p><i class="fas fa-compact-disc"></i> <strong>First Album:</strong> {{.FirstAlbum}}</p>
+                <p><i class="fas fa-users"></i> <strong>Members:</strong></p>
+                <ul class="members-list">
+                    {{range .Members}}
+                    <li>{{.}}</li>
+                    {{end}}
+                </ul>
+            </div>
+
+            <div class="action-buttons">
+                <a href="/artist/relations/{{.ID}}" class="artist-button">
+                    <i class="fas fa-project-diagram"></i> Relations
+                </a>
+               
+                <a href="/artist/dates//{{.ID}}" class="artist-button">
+                    <i class="fas fa-calendar-alt"></i> Concert Dates
+                </a>
+                
+                <a href="/artist/locations/{{.ID}}" class="artist-button">
+                    <i class="fas fa-map-marker-alt"></i> Tour Locations
+                </a>
+            </div>
+        </div>
+    </section>
+
+    
+    <footer class="footer">
+        <p><i class="far fa-copyright"></i> 2024 Groupie-Tracker. All rights reserved.</p>
+        <div class="social-links">
+            <a href="https://github.com/garveyshah" target="_blank" aria-label="Ouma's GitHub Profile"><i class="fab fa-github"></i> Ouma</a>
+            <a href="https://github.com/steodhiambo" target="_blank" aria-label="Steve's GitHub Profile"><i class="fab fa-github"></i> Stephen</a>
+        </div>
+    </footer>
+</body>
+</html>
