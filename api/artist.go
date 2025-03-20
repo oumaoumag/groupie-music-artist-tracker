@@ -11,6 +11,7 @@ import (
 type HomepageData struct {
 	Artists []Artist
 	Suggestions []string
+	SearchQuery string
 }
 
 
@@ -201,6 +202,7 @@ func (h *Handler) HomepageHandler(w http.ResponseWriter, r *http.Request) {
 	templateData := HomepageData{
 		Artists: filtered,
 		Suggestions: suggestions,
+		SearchQuery: r.URL.Query().Get("search"),
 	}
 
 	// Render the homepage with all artists (or filtered results)
