@@ -11,9 +11,6 @@
 <body>
     <header class="header">
         <h1><i class="fas fa-project-diagram"></i> Tour Dates and Locations</h1>
-        <a href="/" class="home-button" title="Home">
-            <i class="fas fa-home"></i>
-        </a>
         <a href="javascript:history.back()" class="back-button" title="Go Back">
             <i class="fas fa-arrow-left"></i>
         </a>
@@ -23,14 +20,12 @@
         <table class="tour-dates-table">
             <thead>
                 <tr>
-                    <th>Tour ID</th>
                     <th>Location</th>
                     <th>Dates</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>{{.ID}}</td>
                     <td>
                         <ul>
                             {{range $location, $dates := .DatesLocations}}
