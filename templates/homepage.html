@@ -33,6 +33,12 @@
                     <button type="submit" class="btn">
                         <i class="fas fa-search"></i> Search
                     </button>
+                    {{if .SearchQuery}}
+                    <a href="/" class="btn reset-btn">
+                        <i class="fas fa-times"></i>
+                        Clear
+                    </a>
+                    {{end}}
                 </div>
             </form>
         </div>
