@@ -8,6 +8,13 @@ import (
 	"fmt"
 )
 
+type HomepageData struct {
+	Artists []Artist
+	Suggestions []string
+	SearchQuery string
+}
+
+
 type Artist struct {
 	ID           int      `json:"id"`
 	Image        string   `json:"image"`
@@ -108,15 +115,11 @@ func (h *Handler) ArtistsHandler(w http.ResponseWriter, r *http.Request) {
 
 				RenderTemplate(w, "artist.html", artistData)
 
-				// RenderErrorPage(w, http.StatusNotFound, "Artist Not Found", "The requested artist could not be found.")
-				// return
 				return
 			}
 		}
 		// If artist not found, return a 404
 		RenderErrorPage(w, http.StatusNotFound, "Artist Not Found", "The requested artist could not be found.")
-		// return
-		// http.Error(w, "Artist Not Found", http.StatusNotFound)
 		return
 	}
 
@@ -139,22 +142,50 @@ func (h *Handler) HomepageHandler(w http.ResponseWriter, r *http.Request) {
 
 	// URL to fetch all artists
 	url := "https://groupietrackers.herokuapp.com/api/artists"
-	data := []Artist{}
+	allArtists := []Artist{}
 
 	// Fetch artist data
-	if _, err := h.FetchData(url, &data); err != nil {
+	if _, err := h.FetchData(url, &allArtists); err != nil {
 		RenderErrorPage(w, http.StatusInternalServerError, "Internal Server Error", "Data Unavailable")
 		return
 	}
 
-	// Handle search queries
+	// Generate suggestions from all artists
+	suggestions := make([]string, 0)
+	seen := make(map[string]bool)  // To avoid duplicates
+
+	for _, artist := range allArtists {
+		if !seen[artist.Name] {
+			suggestions = append(suggestions, artist.Name)
+			seen[artist.Name] = true
+		}
+
+		for _, member := range artist.Members {
+			if !seen[member] {
+				suggestions = append(suggestions, member)
+				seen[member] = true
+			}
+		}
+
+		if !seen[artist.FirstAlbum] {
+			suggestions = append(suggestions, artist.FirstAlbum)
+			seen[artist.FirstAlbum] = true
+		}
+
+		creationDateStr := strconv.Itoa(artist.CreationDate)
+		if !seen[creationDateStr] {
+			suggestions = append(suggestions, creationDateStr)
+			seen[creationDateStr] = true
+		}
+	}
+
+	// Handle searc queries
 	searchQuery := strings.ToLower(r.URL.Query().Get("search"))
 	filtered := []Artist{}
 
 	if searchQuery != "" {
 		log.Printf("Search query received: %q\n", searchQuery)
-		
-		for _, artist := range data {
+		for _, artist := range allArtists {
 			if matches, reason := searchArtist(artist, searchQuery); matches {
 				log.Println(reason)
 				filtered = append(filtered, artist)
@@ -162,12 +193,19 @@ func (h *Handler) HomepageHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		log.Printf("Search completed. Found %d matches\n", len(filtered))
-		data = filtered
 	} else {
 		log.Println("No search query provided")
+		filtered = allArtists
+	}
+
+	// Prepare data for the template
+	templateData := HomepageData{
+		Artists: filtered,
+		Suggestions: suggestions,
+		SearchQuery: r.URL.Query().Get("search"),
 	}
 
 	// Render the homepage with all artists (or filtered results)
-	h.RenderTemplate(w, "homepage.html", data)
+	h.RenderTemplate(w, "homepage.html", templateData)
 	log.Println("Finished handling request for homepage")
 }

@@ -23,17 +23,29 @@
                            name="search" 
                            placeholder="Search artists..." 
                            class="search-input"
+                           list="search-suggestions"
                            aria-label="Search artists">
+                           <datalist id="search-suggestions">
+                            {{range .Suggestions}}
+                            <option value="{{.}}">
+                                {{end}}
+                            </datalist>
                     <button type="submit" class="btn">
                         <i class="fas fa-search"></i> Search
                     </button>
+                    {{if .SearchQuery}}
+                    <a href="/" class="btn reset-btn">
+                        <i class="fas fa-times"></i>
+                        Clear
+                    </a>
+                    {{end}}
                 </div>
             </form>
         </div>
     </section>
 
     <section class="artists-grid">
-        {{range .}}
+        {{range .Artists}}
         <a href="/artist/view/{{.ID}}" class="artist-card">
             <img src="{{.Image}}" alt="{{.Name}}" loading="lazy">
             <h2>{{.Name}}</h2>
