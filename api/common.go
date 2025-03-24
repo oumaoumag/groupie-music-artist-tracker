@@ -27,16 +27,20 @@ func FetchData(url string, target interface{}) (interface{}, error) {
 
 // RenderTemplate: Parses and executes a template file
 func RenderTemplate(w http.ResponseWriter, tmpl string, data interface{}) {
-	t, err := template.ParseFiles("templates/" + tmpl)
-	if err != nil {
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	}
-	log.Println("Rendering template:", tmpl)
-	
-	if err := t.Execute(w, data); err != nil {
-		log.Printf("Error in %v template rendering: %v\n", tmpl, err)
-		return
-	}
-	log.Println("Finished Rendering Template : ", tmpl)
+    t, err := template.ParseFiles("templates/" + tmpl)
+    if err != nil {
+        log.Printf("Error loading template %s: %v\n", tmpl, err) // Debug log
+        http.Error(w, "Internal Server Error: Unable to load template", http.StatusInternalServerError)
+        return
+    }
+
+    log.Println("Rendering template:", tmpl)
+
+    if err := t.Execute(w, data); err != nil {
+        log.Printf("Error executing template %s: %v\n", tmpl, err) // Debug log
+        http.Error(w, "Internal Server Error: Error rendering template", http.StatusInternalServerError)
+        return
+    }
+
+    log.Println("Finished Rendering Template:", tmpl)
 }
