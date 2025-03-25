@@ -287,7 +287,7 @@ func (h *Handler) HomepageHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	
-	// Handle h queries
+	// Handle search queries
 	searchQuery := r.URL.Query().Get("search")
 	filtered := []Artist{}
 
