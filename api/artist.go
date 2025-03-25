@@ -40,61 +40,86 @@ type Handler struct {
 // searchArtist checks if an artist matches the search query
 func searchArtist(artist Artist, query string) (bool, string) {
 	query = strings.ToLower(query)
+	normalizedQuery := NormalizeStrings(query)
 
 	// Convert searchable fields to lowercase
 	artistName := strings.ToLower(artist.Name)
 	firstAlbum := strings.ToLower(artist.FirstAlbum)
 	creationDate := strconv.Itoa(artist.CreationDate)
+
+	// Check possible date formats
+	possibleDateFormats := ExtractDateFormat(query)
 	
 	// Check artist name
 	if strings.Contains(artistName, query) {
-		return true, fmt.Sprintf("Match found in artist name: %s", artist.Name)
+		return true, fmt.Sprintf("	Match found in artist name: %s", artist.Name)
 	}
 	
-	// Check first album
-	if strings.Contains(firstAlbum, query) {
-		return true, fmt.Sprintf("Match found in first album: %s", artist.FirstAlbum)
-	}
 	
-	// Check creation date
-	if strings.Contains(creationDate, query) {
-		return true, fmt.Sprintf("Match found in creation date: %d", artist.CreationDate)
-	}
-	
-	// Check members(case-insensitive)
-	for _, member := range artist.Members {
-		if strings.Contains(strings.ToLower(member), query) {
-			return true, fmt.Sprintf("Match found in member name: %s", member)
+	// Check creation date - with date format flexibility
+	for _, dateFormat := range possibleDateFormats {
+		if strings.Contains(creationDate, dateFormat) {
+			return true, fmt.Sprintf("Match found in creation date: %d", artist.CreationDate)
+		}
+		
+		// Check first album
+		if strings.Contains(firstAlbum, dateFormat) {
+			return true, fmt.Sprintf("Match found in first album: %s", artist.FirstAlbum)
 		}
 	}
 
-	// Check dates if available
+		// Check members(case-insensitive)
+		for _, member := range artist.Members {
+			if strings.Contains(strings.ToLower(member), query) {
+				return true, fmt.Sprintf("Match found in member name: %s", member)
+			}
+		}
+
+		// Check location 
+		for _, location := range artist.LocationList {
+			normalizedLocation := NormalizeStrings(strings.ToLower(location))
+			if strings.Contains(normalizedLocation, query) {
+				return true, fmt.Sprintf("Match found in location: %s", location)
+
+		}
+	}
+
+	// Check dates
 	for _, date := range artist.DatesList {
-		if strings.Contains(strings.ToLower(date), query) {
-			return true, fmt.Sprintf("Match found in concert date: %s", date)
+		dateLower := strings.ToLower(date)
+
+		for _, dateFormat := range possibleDateFormats {
+			if strings.Contains(dateLower, dateFormat) {
+				return true, fmt.Sprintf("Match found in concert date: %s", date)
+			}
 		}
+		
 	}
 
-	// Check location if available
-	for _, location := range artist.LocationList {
-		if strings.Contains(strings.ToLower(location), query) {
-			return true, fmt.Sprintf("Match found in location: %s", location)
-		}
-	}
+	
 	
 	// Check relation location and dates
 	for location, dates := range artist.RelationMap {
-		if strings.Contains(strings.ToLower(location), query) {
+		locationLower := strings.ToLower(location)
+		normalizedLocation := NormalizeStrings(locationLower)
+		
+		if strings.Contains(locationLower, query)  || strings.Contains(normalizedLocation, normalizedQuery) {
 		return true, fmt.Sprintf("Match found in relation location: %s", location)
 	} 
 
 	 for _, date := range dates {
-		if strings.Contains(strings.ToLower(date), query) {
-			return true, fmt.Sprintf("Match found in relation date: %s", date)
+		dateLower := strings.ToLower(date)
+
+		for _, dateFormat := range possibleDateFormats {
+			if strings.Contains(dateLower, dateFormat) {
+				return true, fmt.Sprintf("Match found in relation date: %s", date)
+			}
 		}
+		
 	 }
 	}
-	return false, ""
+	
+return false, ""
 }
 
 // ArtistsHandler handles the request to fetch artist data or filter by search query
@@ -282,6 +307,11 @@ func (h *Handler) HomepageHandler(w http.ResponseWriter, r *http.Request) {
 			if !seen[date] {
 				suggestions = append(suggestions, date)
 				seen[date] = true
+			}
+		}
+
+		for location := range artist.RelationMap {
+			if !seen[location] {
 			}
 		}
 	}
