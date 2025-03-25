@@ -21,14 +21,16 @@
                 <div class="search-container">
                     <input type="text" 
                            name="search" 
-                           placeholder="Search artists..." 
+                           placeholder="Search artists, members, locations, dates..." 
                            class="search-input"
                            list="search-suggestions"
+                           value="{{.SearchQuery}}"
+                           autocomplete="off"
                            aria-label="Search artists">
                            <datalist id="search-suggestions">
                             {{range .Suggestions}}
                             <option value="{{.}}">
-                                {{end}}
+                            {{end}}
                             </datalist>
                     <button type="submit" class="btn">
                         <i class="fas fa-search"></i> Search
@@ -45,12 +47,24 @@
     </section>
 
     <section class="artists-grid">
-        {{range .Artists}}
+        {{if len .Artists}}
+            {{range .Artists}}
         <a href="/artist/view/{{.ID}}" class="artist-card">
             <img src="{{.Image}}" alt="{{.Name}}" loading="lazy">
             <h2>{{.Name}}</h2>
+            <div class="artist-info">
+                <p><strong>Creation:</strong> {{.CreationDate}}</p>
+                <p><strong>FirstAlbum:</strong> {{.FirstAlbum}}</p>
+            </div>
         </a>
         {{end}}
+    {{else}}
+        <div class="no-results">
+            <i class="fas fa-search fa-3x"></i>
+            <h3>No results found for "{{.SearchQuery}}"</h3>
+            <p>Try different keywords or check your spelling</p>
+        </div>
+    {{end}}
     </section>
 
     <footer class="footer">
@@ -60,5 +74,27 @@
             <a href="https://github.com/steodhiambo" target="_blank" aria-label="Steve's GitHub Profile"><i class="fab fa-github"></i> Stephen</a>
         </div>
     </footer>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.querySelector('.search-input');
+            const suggestions = Array.from(document.querySelectorAll('#search-suggestions option')).map(opt => opt.value);
+
+            // Highlight and select matches as user types
+            searchInput.addEventListener('input', function(e) {
+            const value = e.target.value.toLowerCase();
+            if (value.length < 2) return;
+
+            // Find matching suggestions
+            const matches = suggestions.filter(suggestions =>
+            suggestion.toLowerCase().includes(value)
+            );
+
+            // If we have exact match, prioritize them
+            if (matches.length > 0) {
+                 console.log(`Found ${matches.length} matches for "${value}"`);
+            }
+         });
+    });
+    </script>
 </body>
 </html>
