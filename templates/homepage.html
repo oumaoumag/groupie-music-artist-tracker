@@ -52,7 +52,7 @@
         <a href="/artist/view/{{.ID}}" class="artist-card">
             <img src="{{.Image}}" alt="{{.Name}}" loading="lazy">
             <h2>{{.Name}}</h2>
-            <div class="artist-info">
+            <div class="artist-info" style="text-align: center;">
                 <p><strong>Creation:</strong> {{.CreationDate}}</p>
                 <p><strong>FirstAlbum:</strong> {{.FirstAlbum}}</p>
             </div>
@@ -85,7 +85,7 @@
             if (value.length < 2) return;
 
             // Find matching suggestions
-            const matches = suggestions.filter(suggestions =>
+            const matches = suggestions.filter(suggestion =>
             suggestion.toLowerCase().includes(value)
             );
 
