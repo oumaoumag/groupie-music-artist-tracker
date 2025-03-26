@@ -1,19 +1,18 @@
 package api
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
 	"strings"
-	"fmt"
 )
 
 type HomepageData struct {
-	Artists []Artist
+	Artists     []Artist
 	Suggestions []string
 	SearchQuery string
 }
-
 
 type Artist struct {
 	ID           int      `json:"id"`
@@ -25,10 +24,9 @@ type Artist struct {
 	Locations    string   `json:"locations"`
 	ConcertDates string   `json:"concertDates"`
 	Relations    string   `json:"relations"`
-	LocationList []string 
-	DatesList	 []string 
-	RelationMap  map[string]string
-
+	LocationList []string
+	DatesList    []string
+	RelationMap  map[string][]string
 }
 
 // Handler struct encapsulates dependancies for our HTTP handlers
@@ -40,27 +38,33 @@ type Handler struct {
 // searchArtist checks if an artist matches the search query
 func searchArtist(artist Artist, query string) (bool, string) {
 	query = strings.ToLower(query)
+	normalizedQuery := NormalizeStrings(query)
 
 	// Convert searchable fields to lowercase
 	artistName := strings.ToLower(artist.Name)
 	firstAlbum := strings.ToLower(artist.FirstAlbum)
 	creationDate := strconv.Itoa(artist.CreationDate)
-	
+
+	// Check possible date formats
+	possibleDateFormats := ExtractDateFormat(query)
+
 	// Check artist name
 	if strings.Contains(artistName, query) {
-		return true, fmt.Sprintf("Match found in artist name: %s", artist.Name)
+		return true, fmt.Sprintf("	Match found in artist name: %s", artist.Name)
 	}
-	
-	// Check first album
-	if strings.Contains(firstAlbum, query) {
-		return true, fmt.Sprintf("Match found in first album: %s", artist.FirstAlbum)
+
+	// Check creation date - with date format flexibility
+	for _, dateFormat := range possibleDateFormats {
+		if strings.Contains(creationDate, dateFormat) {
+			return true, fmt.Sprintf("Match found in creation date: %d", artist.CreationDate)
+		}
+
+		// Check first album
+		if strings.Contains(firstAlbum, dateFormat) {
+			return true, fmt.Sprintf("Match found in first album: %s", artist.FirstAlbum)
+		}
 	}
-	
-	// Check creation date
-	if strings.Contains(creationDate, query) {
-		return true, fmt.Sprintf("Match found in creation date: %d", artist.CreationDate)
-	}
-	
+
 	// Check members(case-insensitive)
 	for _, member := range artist.Members {
 		if strings.Contains(strings.ToLower(member), query) {
@@ -68,32 +72,48 @@ func searchArtist(artist Artist, query string) (bool, string) {
 		}
 	}
 
-	// Check dates if available
-	for _, date := range artist.DatesList {
-		if strings.Contains(strings.ToLower(date), query) {
-			return true, fmt.Sprintf("Match found in concert date: %s", date)
+	// Check location
+	for _, location := range artist.LocationList {
+		normalizedLocation := NormalizeStrings(strings.ToLower(location))
+		if strings.Contains(normalizedLocation, query) {
+			return true, fmt.Sprintf("Match found in location: %s", location)
+
 		}
 	}
 
-	// Check location if available
-	for _, location := range artist.LocationList {
-		if strings.Contains(strings.ToLower(location), query) {
-			return true, fmt.Sprintf("Match found in location: %s", location)
+	// Check dates
+	for _, date := range artist.DatesList {
+		dateLower := strings.ToLower(date)
+
+		for _, dateFormat := range possibleDateFormats {
+			if strings.Contains(dateLower, dateFormat) {
+				return true, fmt.Sprintf("Match found in concert date: %s", date)
+			}
 		}
+
 	}
-	
+
 	// Check relation location and dates
 	for location, dates := range artist.RelationMap {
-		if strings.Contains(strings.ToLower(location), query) {
-		return true, fmt.Sprintf("Match found in relation location: %s", location)
-	} 
+		locationLower := strings.ToLower(location)
+		normalizedLocation := NormalizeStrings(locationLower)
 
-	 for _, date := range dates {
-		if strings.Contains(strings.ToLower(date), query) {
-			return true, fmt.Sprintf("Match found in relation date: %s", date)
+		if strings.Contains(locationLower, query) || strings.Contains(normalizedLocation, normalizedQuery) {
+			return true, fmt.Sprintf("Match found in relation location: %s", location)
 		}
-	 }
+
+		for _, date := range dates {
+			dateLower := strings.ToLower(date)
+
+			for _, dateFormat := range possibleDateFormats {
+				if strings.Contains(dateLower, dateFormat) {
+					return true, fmt.Sprintf("Match found in relation date: %s", date)
+				}
+			}
+
+		}
 	}
+
 	return false, ""
 }
 
@@ -117,11 +137,9 @@ func (h *Handler) ArtistsHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			RenderErrorPage(w, http.StatusInternalServerError, "Internal Server Error", " 	Wrong ID")
 
-			// http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 			return
 		}
 
-		// log.Printf("ArtistId - %d\n", artistID)
 	}
 	// URL to fetch all artists
 	artistsURL := "https://groupietrackers.herokuapp.com/api/artists"
@@ -133,7 +151,6 @@ func (h *Handler) ArtistsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// log.Printf("Fetched artist data: %+v\n", data)
 
 	var artistData Artist
 	// Check if we're fetching a specific artist by ID
@@ -184,7 +201,7 @@ func (h *Handler) HomepageHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Fetch locations data
 	locationsURL := "https://groupietrackers.herokuapp.com/api/locations"
-	locationsResponse:= LocationsAPIResponse{}
+	locationsResponse := LocationsAPIResponse{}
 	if _, err := h.FetchData(locationsURL, &locationsResponse); err != nil {
 		log.Printf("Error fetching location: %v", err)
 	} else {
@@ -196,14 +213,14 @@ func (h *Handler) HomepageHandler(w http.ResponseWriter, r *http.Request) {
 
 		// Assigning locations to artists
 		for i := range allArtists {
-		if locations, ok := locationsMap[allArtists[i].ID]; ok {
-			allArtists[i].LocationList = locations
+			if locations, ok := locationsMap[allArtists[i].ID]; ok {
+				allArtists[i].LocationList = locations
 			}
 		}
 	}
 
 	// Fetch dates data
-	datesURL := "https://groupietrackers.herokyapp.com/api/locations"
+	datesURL := "https://groupietrackers.herokuapp.com/api/dates"
 	datesReponse := DatesAPIResponse{}
 	if _, err := h.FetchData(datesURL, &datesReponse); err != nil {
 		log.Printf("Error fetching dates: %v", err)
@@ -216,7 +233,7 @@ func (h *Handler) HomepageHandler(w http.ResponseWriter, r *http.Request) {
 
 		// Assign dates to artists
 		for i := range allArtists {
-			if dates, ok :=  datesMap[allArtists[i].ID]; ok {
+			if dates, ok := datesMap[allArtists[i].ID]; ok {
 				allArtists[i].DatesList = dates
 			}
 		}
@@ -245,7 +262,7 @@ func (h *Handler) HomepageHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Generate suggestions from all artists and there related data
 	suggestions := make([]string, 0)
-	seen := make(map[string]bool)  // To avoid duplicates
+	seen := make(map[string]bool) // To avoid duplicates
 
 	for _, artist := range allArtists {
 		if !seen[artist.Name] {
@@ -284,10 +301,14 @@ func (h *Handler) HomepageHandler(w http.ResponseWriter, r *http.Request) {
 				seen[date] = true
 			}
 		}
+
+		for location := range artist.RelationMap {
+			if !seen[location] {
+			}
+		}
 	}
 
-	
-	// Handle h queries
+	// Handle search queries
 	searchQuery := r.URL.Query().Get("search")
 	filtered := []Artist{}
 
@@ -308,7 +329,7 @@ func (h *Handler) HomepageHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Prepare data for the template
 	templateData := HomepageData{
-		Artists: filtered,
+		Artists:     filtered,
 		Suggestions: suggestions,
 		SearchQuery: searchQuery,
 	}

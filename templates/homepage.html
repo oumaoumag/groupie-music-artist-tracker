@@ -21,15 +21,18 @@
                 <div class="search-container">
                     <input type="text" 
                            name="search" 
-                           placeholder="Search artists..." 
+                           placeholder="Search artists, members, locations, dates..." 
                            class="search-input"
-                           list="search-suggestions"
-                           aria-label="Search artists">
-                           <datalist id="search-suggestions">
-                            {{range .Suggestions}}
-                            <option value="{{.}}">
-                                {{end}}
-                            </datalist>
+                           list=""  
+                           id="search-input"
+                           value="{{.SearchQuery}}"
+                           autocomplete="off"
+                           aria-label="Search">
+                    <datalist id="search-suggestions">
+                        {{range .Suggestions}}
+                        <option value="{{.}}">
+                        {{end}}
+                    </datalist>
                     <button type="submit" class="btn">
                         <i class="fas fa-search"></i> Search
                     </button>
@@ -45,12 +48,24 @@
     </section>
 
     <section class="artists-grid">
-        {{range .Artists}}
+        {{if len .Artists}}
+            {{range .Artists}}
         <a href="/artist/view/{{.ID}}" class="artist-card">
             <img src="{{.Image}}" alt="{{.Name}}" loading="lazy">
             <h2>{{.Name}}</h2>
+            <div class="artist-info" style="text-align: center;">
+                <p><strong>Creation:</strong> {{.CreationDate}}</p>
+                <p><strong>FirstAlbum:</strong> {{.FirstAlbum}}</p>
+            </div>
         </a>
         {{end}}
+    {{else}}
+        <div class="no-results">
+            <i class="fas fa-search fa-3x"></i>
+            <h3>No results found for "{{.SearchQuery}}"</h3>
+            <p>Try different keywords or check your spelling</p>
+        </div>
+    {{end}}
     </section>
 
     <footer class="footer">
@@ -60,5 +75,27 @@
             <a href="https://github.com/steodhiambo" target="_blank" aria-label="Steve's GitHub Profile"><i class="fab fa-github"></i> Stephen</a>
         </div>
     </footer>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.querySelector('#search-input');
+        const suggestions = Array.from(document.querySelectorAll('#search-suggestions option')).map(opt => opt.value);
+
+        searchInput.addEventListener('input', function(e) {
+            const value = e.target.value;
+            
+            // Only show suggestions if there's text in the input
+            if (value.length > 0) {
+                searchInput.setAttribute('list', 'search-suggestions');
+            } else {
+                searchInput.setAttribute('list', '');
+            }
+
+            // Optional: Filter suggestions based on input
+            if (value.length >= 2) {
+                console.log(`Searching for: "${value}"`);
+            }
+        });
+    });
+    </script>
 </body>
 </html>
