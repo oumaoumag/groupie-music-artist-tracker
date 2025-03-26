@@ -23,15 +23,16 @@
                            name="search" 
                            placeholder="Search artists, members, locations, dates..." 
                            class="search-input"
-                           list="search-suggestions"
+                           list=""  
+                           id="search-input"
                            value="{{.SearchQuery}}"
                            autocomplete="off"
-                           aria-label="Search artists">
-                           <datalist id="search-suggestions">
-                            {{range .Suggestions}}
-                            <option value="{{.}}">
-                            {{end}}
-                            </datalist>
+                           aria-label="Search">
+                    <datalist id="search-suggestions">
+                        {{range .Suggestions}}
+                        <option value="{{.}}">
+                        {{end}}
+                    </datalist>
                     <button type="submit" class="btn">
                         <i class="fas fa-search"></i> Search
                     </button>
@@ -76,24 +77,24 @@
     </footer>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
-            const searchInput = document.querySelector('.search-input');
-            const suggestions = Array.from(document.querySelectorAll('#search-suggestions option')).map(opt => opt.value);
+        const searchInput = document.querySelector('#search-input');
+        const suggestions = Array.from(document.querySelectorAll('#search-suggestions option')).map(opt => opt.value);
 
-            // Highlight and select matches as user types
-            searchInput.addEventListener('input', function(e) {
-            const value = e.target.value.toLowerCase();
-            if (value.length < 2) return;
-
-            // Find matching suggestions
-            const matches = suggestions.filter(suggestion =>
-            suggestion.toLowerCase().includes(value)
-            );
-
-            // If we have exact match, prioritize them
-            if (matches.length > 0) {
-                 console.log(`Found ${matches.length} matches for "${value}"`);
+        searchInput.addEventListener('input', function(e) {
+            const value = e.target.value;
+            
+            // Only show suggestions if there's text in the input
+            if (value.length > 0) {
+                searchInput.setAttribute('list', 'search-suggestions');
+            } else {
+                searchInput.setAttribute('list', '');
             }
-         });
+
+            // Optional: Filter suggestions based on input
+            if (value.length >= 2) {
+                console.log(`Searching for: "${value}"`);
+            }
+        });
     });
     </script>
 </body>
