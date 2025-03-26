@@ -1,4 +1,4 @@
-# Groupie-Tracker-Visualizations
+# Groupie-Tracker-Search-Bar
 
 ## Description:
 
