@@ -1,19 +1,18 @@
 package api
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
 	"strings"
-	"fmt"
 )
 
 type HomepageData struct {
-	Artists []Artist
+	Artists     []Artist
 	Suggestions []string
 	SearchQuery string
 }
-
 
 type Artist struct {
 	ID           int      `json:"id"`
@@ -25,6 +24,9 @@ type Artist struct {
 	Locations    string   `json:"locations"`
 	ConcertDates string   `json:"concertDates"`
 	Relations    string   `json:"relations"`
+	LocationList []string
+	DatesList    []string
+	RelationMap  map[string][]string
 }
 
 // Handler struct encapsulates dependancies for our HTTP handlers
@@ -35,33 +37,83 @@ type Handler struct {
 
 // searchArtist checks if an artist matches the search query
 func searchArtist(artist Artist, query string) (bool, string) {
+	query = strings.ToLower(query)
+	normalizedQuery := NormalizeStrings(query)
+
 	// Convert searchable fields to lowercase
 	artistName := strings.ToLower(artist.Name)
 	firstAlbum := strings.ToLower(artist.FirstAlbum)
 	creationDate := strconv.Itoa(artist.CreationDate)
-	
+
+	// Check possible date formats
+	possibleDateFormats := ExtractDateFormat(query)
+
 	// Check artist name
 	if strings.Contains(artistName, query) {
-		return true, fmt.Sprintf("Match found in artist name: %s", artist.Name)
+		return true, fmt.Sprintf("	Match found in artist name: %s", artist.Name)
 	}
-	
-	// Check first album
-	if strings.Contains(firstAlbum, query) {
-		return true, fmt.Sprintf("Match found in first album: %s", artist.FirstAlbum)
+
+	// Check creation date - with date format flexibility
+	for _, dateFormat := range possibleDateFormats {
+		if strings.Contains(creationDate, dateFormat) {
+			return true, fmt.Sprintf("Match found in creation date: %d", artist.CreationDate)
+		}
+
+		// Check first album
+		if strings.Contains(firstAlbum, dateFormat) {
+			return true, fmt.Sprintf("Match found in first album: %s", artist.FirstAlbum)
+		}
 	}
-	
-	// Check creation date
-	if strings.Contains(creationDate, query) {
-		return true, fmt.Sprintf("Match found in creation date: %d", artist.CreationDate)
-	}
-	
-	// Check members
+
+	// Check members(case-insensitive)
 	for _, member := range artist.Members {
 		if strings.Contains(strings.ToLower(member), query) {
 			return true, fmt.Sprintf("Match found in member name: %s", member)
 		}
 	}
-	
+
+	// Check location
+	for _, location := range artist.LocationList {
+		normalizedLocation := NormalizeStrings(strings.ToLower(location))
+		if strings.Contains(normalizedLocation, query) {
+			return true, fmt.Sprintf("Match found in location: %s", location)
+
+		}
+	}
+
+	// Check dates
+	for _, date := range artist.DatesList {
+		dateLower := strings.ToLower(date)
+
+		for _, dateFormat := range possibleDateFormats {
+			if strings.Contains(dateLower, dateFormat) {
+				return true, fmt.Sprintf("Match found in concert date: %s", date)
+			}
+		}
+
+	}
+
+	// Check relation location and dates
+	for location, dates := range artist.RelationMap {
+		locationLower := strings.ToLower(location)
+		normalizedLocation := NormalizeStrings(locationLower)
+
+		if strings.Contains(locationLower, query) || strings.Contains(normalizedLocation, normalizedQuery) {
+			return true, fmt.Sprintf("Match found in relation location: %s", location)
+		}
+
+		for _, date := range dates {
+			dateLower := strings.ToLower(date)
+
+			for _, dateFormat := range possibleDateFormats {
+				if strings.Contains(dateLower, dateFormat) {
+					return true, fmt.Sprintf("Match found in relation date: %s", date)
+				}
+			}
+
+		}
+	}
+
 	return false, ""
 }
 
@@ -85,23 +137,20 @@ func (h *Handler) ArtistsHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			RenderErrorPage(w, http.StatusInternalServerError, "Internal Server Error", " 	Wrong ID")
 
-			// http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 			return
 		}
 
-		// log.Printf("ArtistId - %d\n", artistID)
 	}
-	// URL to fetch all artistss
-	url := "https://groupietrackers.herokuapp.com/api/artists"
+	// URL to fetch all artists
+	artistsURL := "https://groupietrackers.herokuapp.com/api/artists"
 	data := []Artist{}
 
 	// Fetch artist data
-	if _, err := h.FetchData(url, &data); err != nil {
+	if _, err := h.FetchData(artistsURL, &data); err != nil {
 		RenderErrorPage(w, http.StatusInternalServerError, "Internal Server Error", "Unable to fetch artist data.")
 		return
 	}
 
-	// log.Printf("Fetched artist data: %+v\n", data)
 
 	var artistData Artist
 	// Check if we're fetching a specific artist by ID
@@ -141,18 +190,79 @@ func (h *Handler) HomepageHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// URL to fetch all artists
-	url := "https://groupietrackers.herokuapp.com/api/artists"
+	artistURL := "https://groupietrackers.herokuapp.com/api/artists"
 	allArtists := []Artist{}
 
 	// Fetch artist data
-	if _, err := h.FetchData(url, &allArtists); err != nil {
+	if _, err := h.FetchData(artistURL, &allArtists); err != nil {
 		RenderErrorPage(w, http.StatusInternalServerError, "Internal Server Error", "Data Unavailable")
 		return
 	}
 
-	// Generate suggestions from all artists
+	// Fetch locations data
+	locationsURL := "https://groupietrackers.herokuapp.com/api/locations"
+	locationsResponse := LocationsAPIResponse{}
+	if _, err := h.FetchData(locationsURL, &locationsResponse); err != nil {
+		log.Printf("Error fetching location: %v", err)
+	} else {
+		// Map loactions to artists
+		locationsMap := make(map[int][]string)
+		for _, loc := range locationsResponse.Index {
+			locationsMap[loc.ID] = loc.Locations
+		}
+
+		// Assigning locations to artists
+		for i := range allArtists {
+			if locations, ok := locationsMap[allArtists[i].ID]; ok {
+				allArtists[i].LocationList = locations
+			}
+		}
+	}
+
+	// Fetch dates data
+	datesURL := "https://groupietrackers.herokuapp.com/api/dates"
+	datesReponse := DatesAPIResponse{}
+	if _, err := h.FetchData(datesURL, &datesReponse); err != nil {
+		log.Printf("Error fetching dates: %v", err)
+	} else {
+		// Map dates to artists
+		datesMap := make(map[int][]string)
+		for _, date := range datesReponse.Index {
+			datesMap[date.ID] = date.Dates
+		}
+
+		// Assign dates to artists
+		for i := range allArtists {
+			if dates, ok := datesMap[allArtists[i].ID]; ok {
+				allArtists[i].DatesList = dates
+			}
+		}
+	}
+
+	// Fetch relations data
+	relationsURL := "https://groupietrackers.herokuapp.com/api/relation"
+	relationsResponse := DatesLocationsAPIResponse{}
+	if _, err := h.FetchData(relationsURL, &relationsResponse); err != nil {
+		log.Printf("Error fetching relations: %v", err)
+	} else {
+		// Map relations to artists
+		relationsMap := make(map[int]map[string][]string)
+		for _, rel := range relationsResponse.Index {
+			relationsMap[rel.ID] = rel.DatesLocations
+		}
+
+		// Assign relations to artists
+		for i := range allArtists {
+			if relations, ok := relationsMap[allArtists[i].ID]; ok {
+				allArtists[i].RelationMap = relations
+			}
+		}
+
+	}
+
+	// Generate suggestions from all artists and there related data
 	suggestions := make([]string, 0)
-	seen := make(map[string]bool)  // To avoid duplicates
+	seen := make(map[string]bool) // To avoid duplicates
 
 	for _, artist := range allArtists {
 		if !seen[artist.Name] {
@@ -177,10 +287,29 @@ func (h *Handler) HomepageHandler(w http.ResponseWriter, r *http.Request) {
 			suggestions = append(suggestions, creationDateStr)
 			seen[creationDateStr] = true
 		}
+
+		for _, location := range artist.LocationList {
+			if !seen[location] {
+				suggestions = append(suggestions, location)
+				seen[location] = true
+			}
+		}
+
+		for _, date := range artist.DatesList {
+			if !seen[date] {
+				suggestions = append(suggestions, date)
+				seen[date] = true
+			}
+		}
+
+		for location := range artist.RelationMap {
+			if !seen[location] {
+			}
+		}
 	}
 
-	// Handle searc queries
-	searchQuery := strings.ToLower(r.URL.Query().Get("search"))
+	// Handle search queries
+	searchQuery := r.URL.Query().Get("search")
 	filtered := []Artist{}
 
 	if searchQuery != "" {
@@ -200,9 +329,9 @@ func (h *Handler) HomepageHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Prepare data for the template
 	templateData := HomepageData{
-		Artists: filtered,
+		Artists:     filtered,
 		Suggestions: suggestions,
-		SearchQuery: r.URL.Query().Get("search"),
+		SearchQuery: searchQuery,
 	}
 
 	// Render the homepage with all artists (or filtered results)
