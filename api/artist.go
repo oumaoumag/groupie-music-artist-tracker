@@ -21,12 +21,12 @@ type Artist struct {
 	Members      []string `json:"members"`
 	CreationDate int      `json:"creationDate"`
 	FirstAlbum   string   `json:"firstAlbum"`
-	Locations    string   `json:"locations"`
-	ConcertDates string   `json:"concertDates"`
-	Relations    string   `json:"relations"`
-	LocationList []string `json:"locations"`
-	DatesList    []string `json:"dates`
-	RelationMap  map[string][]string `json:"relations"`
+	Locations    string   `json:"locations_url"`
+	ConcertDates string   `json:"concertDates_url"`
+	Relations    string   `json:"relations_url"`
+	LocationList []string `json:"location_list"`
+	DatesList    []string `json:"dates_list"`
+	RelationMap  map[string][]string `json:"relation_map"`
 }
 
 // Handler struct encapsulates dependancies for our HTTP handlers
@@ -168,6 +168,21 @@ func (h *Handler) ArtistsHandler(w http.ResponseWriter, r *http.Request) {
 					for _, loc := range locationsResponse.Index {
 						if loc.ID == artistID {
 							artistData.LocationList = loc.Locations
+							break
+						}
+					}
+				}
+
+				// Add dates data
+				datesURL := "https://groupietrackers.herokuapp.com/api/dates"
+				datesResponse := DatesAPIResponse{}
+				if _, err := h.FetchData(datesURL, &datesResponse); err != nil {
+					log.Printf("Error fetching dates: %v", err)
+				} else {
+					// Find dates for this artist
+					for _, date := range datesResponse.Index {
+						if date.ID == artistID {
+							artistData.DatesList = date.Dates
 							break
 						}
 					}
