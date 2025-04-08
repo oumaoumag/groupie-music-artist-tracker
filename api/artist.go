@@ -24,9 +24,9 @@ type Artist struct {
 	Locations    string   `json:"locations"`
 	ConcertDates string   `json:"concertDates"`
 	Relations    string   `json:"relations"`
-	LocationList []string
-	DatesList    []string
-	RelationMap  map[string][]string
+	LocationList []string `json:"locations"`
+	DatesList    []string `json:"dates`
+	RelationMap  map[string][]string `json:"relations"`
 }
 
 // Handler struct encapsulates dependancies for our HTTP handlers
@@ -158,46 +158,16 @@ func (h *Handler) ArtistsHandler(w http.ResponseWriter, r *http.Request) {
 				log.Printf("Rendering artist for ID: %d\n", artistID)
 				artistData = artist
 
-				// Fetch locations data
+				// Add locations data for mapping
 				locationsURL := "https://groupietrackers.herokuapp.com/api/locations"
 				locationsResponse := LocationsAPIResponse{}
 				if _, err := h.FetchData(locationsURL, &locationsResponse); err != nil {
 					log.Printf("Error fetching location: %v", err)
 				} else {
-					// Find locations for this artist
+					// Map locations to artists
 					for _, loc := range locationsResponse.Index {
 						if loc.ID == artistID {
 							artistData.LocationList = loc.Locations
-							break
-						}
-					}
-				}
-
-				// Fetch dates data
-				datesURL := "https://groupietrackers.herokuapp.com/api/dates"
-				datesResponse := DatesAPIResponse{}
-				if _, err := h.FetchData(datesURL, &datesResponse); err != nil {
-					log.Printf("Error fetching dates: %v", err)
-				} else {
-					// Find dates for this artist
-					for _, date := range datesResponse.Index {
-						if date.ID == artistID {
-							artistData.DatesList = date.Dates
-							break
-						}
-					}
-				}
-
-				// Fetch relations data
-				relationsURL := "https://groupietrackers.herokuapp.com/api/relation"
-				relationsResponse := DatesLocationsAPIResponse{}
-				if _, err := h.FetchData(relationsURL, &relationsResponse); err != nil {
-					log.Printf("Error fetching relations: %v", err)
-				} else {
-					// Find relations for this artist
-					for _, rel := range relationsResponse.Index {
-						if rel.ID == artistID {
-							artistData.RelationMap = rel.DatesLocations
 							break
 						}
 					}
