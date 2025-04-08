@@ -7,6 +7,230 @@
     <title>{{.Name}} - Artist Information</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="/static/style.css">
+    <style>
+        /* Additional styles for the enhanced artist page */
+        .artist-details {
+            padding: 2rem 1rem;
+        }
+    
+        .artist-card.centered {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+            border-radius: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+    
+        .artist-header {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    
+        .artist-header img {
+            width: 200px;
+            height: 200px;
+            border-radius: 10px;
+            object-fit: cover;
+            margin-right: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+    
+        .artist-info {
+            flex: 1;
+        }
+    
+        .artist-info h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+    
+        .artist-tabs {
+            width: 100%;
+            margin-top: 2rem;
+        }
+    
+        .tabs-nav {
+            display: flex;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    
+        .tab-btn {
+            padding: 1rem 1.5rem;
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+    
+        .tab-btn:hover {
+            color: #fff;
+        }
+    
+        .tab-btn.active {
+            color: #4facfe;
+        }
+    
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            border-radius: 3px 3px 0 0;
+        }
+    
+        .tab-content {
+            display: none;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+    
+        .tab-content.active {
+            display: block;
+        }
+    
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+    
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    
+        /* Cards for locations and dates */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+    
+        .info-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 1.2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+        }
+    
+        .info-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: #4facfe;
+            display: flex;
+            align-items: center;
+        }
+    
+        .info-card h3 i {
+            margin-right: 0.5rem;
+        }
+    
+        .info-card ul {
+            list-style: none;
+            padding: 0;
+        }
+    
+        .info-card li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    
+        .info-card li:last-child {
+            border-bottom: none;
+        }
+    
+        /* Relations table */
+        .relations-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+    
+        .relations-table th {
+            text-align: left;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            color: #4facfe;
+        }
+    
+        .relations-table td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            vertical-align: top;
+        }
+    
+        .relations-table tr:last-child td {
+            border-bottom: none;
+        }
+    
+        .relations-table ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+    
+        .relations-table li {
+            padding: 0.3rem 0;
+        }
+    
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .artist-header {
+                flex-direction: column;
+                text-align: center;
+            }
+    
+            .artist-header img {
+                margin-right: 0;
+                margin-bottom: 1.5rem;
+            }
+    
+            .tabs-nav {
+                overflow-x: auto;
+                padding-bottom: 0.5rem;
+            }
+    
+            .tab-btn {
+                white-space: nowrap;
+                padding: 0.8rem 1rem;
+            }
+    
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+    
+            .relations-table th,
+            .relations-table td {
+                padding: 0.8rem 0.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <header class="header">
@@ -18,36 +242,89 @@
 
     <section class="artist-details">
         <div class="artist-card centered">
-            <img src="{{.Image}}" alt="{{.Name}}" loading="lazy">
-            
-            <div class="artist-info">
-                <p><i class="fas fa-calendar-plus"></i> <strong>Formation Date:</strong> {{.CreationDate}}</p>
-                <p><i class="fas fa-compact-disc"></i> <strong>First Album:</strong> {{.FirstAlbum}}</p>
-                <p><i class="fas fa-users"></i> <strong>Members:</strong></p>
-                <ul class="members-list">
-                    {{range .Members}}
-                    <li>{{.}}</li>
-                    {{end}}
-                </ul>
-            </div>
-
-            <div class="action-buttons">
-                <a href="/artist/relations/{{.ID}}" class="artist-button">
-                    <i class="fas fa-project-diagram"></i> Relations
-                </a>
-               
-                <a href="/artist/dates//{{.ID}}" class="artist-button">
-                    <i class="fas fa-calendar-alt"></i> Concert Dates
-                </a>
+            <div class="artist-header">
+                <img src="{{.Image}}" alt="{{.Name}}" loading="lazy">
                 
-                <a href="/artist/locations/{{.ID}}" class="artist-button">
-                    <i class="fas fa-map-marker-alt"></i> Tour Locations
-                </a>
+                <div class="artist-info">
+                    <h2>{{.Name}}</h2>
+                    <p><i class="fas fa-calendar-plus"></i> <strong>Formation Date:</strong> {{.CreationDate}}</p>
+                    <p><i class="fas fa-compact-disc"></i> <strong>First Album:</strong> {{.FirstAlbum}}</p>
+                    <p><i class="fas fa-users"></i> <strong>Members:</strong></p>
+                    <ul class="members-list">
+                        {{range .Members}}
+                        <li>{{.}}</li>
+                        {{end}}
+                    </ul>
+                    </div>
+            </div>
+            
+            <div class="artist-tabs">
+                <div class="tabs-nav">
+                    <button class="tab-btn active" data-tab="locations">
+                        <i class="fas fa-map-marker-alt"></i> Tour Locations
+                    </button>
+                    <button class="tab-btn" data-tab="dates">
+                        <i class="fas fa-calendar-alt"></i> Concert Dates
+                    </button>
+                    <button class="tab-btn" data-tab="relations">
+                        <i class="fas fa-project-diagram"></i> Tour Relations
+                    </button>
+                </div>
+
+                <!-- Locations Tab -->
+                <div class="tab-content active" id="locations-tab">
+                    <h3><i class="fas fa-globe"></i> Tour Locations</h3>
+                    <div class="card-grid">
+                        {{range .LocationList}}
+                        <div class="info-card">
+                            <h3><i class="fas fa-map-pin"></i> {{.}}</h3>
+                        </div>
+                        {{end}}
+                    </div>
+                </div>
+
+                <!-- Dates Tab -->
+                <div class="tab-content" id="dates-tab">
+                    <h3><i class="fas fa-calendar-check"></i> Concert Dates</h3>
+                    <div class="card-grid">
+                        {{range .DatesList}}
+                        <div class="info-card">
+                            <h3><i class="fas fa-clock"></i> {{.}}</h3>
+                        </div>
+                        {{end}}
+                    </div>
+                </div>
+
+                <!-- Relations Tab -->
+                <div class="tab-content" id="relations-tab">
+                    <h3><i class="fas fa-link"></i> Tour Relations (Locations & Dates)</h3>
+                    <table class="relations-table">
+                        <thead>
+                            <tr>
+                                <th>Location</th>
+                                <th>Concert Dates</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{range $location, $dates := .RelationMap}}
+                            <tr>
+                                <td>{{$location}}</td>
+                                <td>
+                                    <ul>
+                                        {{range $dates}}
+                                        <li>{{.}}</li>
+                                        {{end}}
+                                    </ul>
+                                </td>
+                            </tr>
+                            {{end}}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </section>
 
-    
     <footer class="footer">
         <p><i class="far fa-copyright"></i> 2024 Groupie-Tracker. All rights reserved.</p>
         <div class="social-links">
@@ -55,5 +332,27 @@
             <a href="https://github.com/steodhiambo" target="_blank" aria-label="Steve's GitHub Profile"><i class="fab fa-github"></i> Stephen</a>
         </div>
     </footer>
+<script>
+    // Tab functionality
+    document.addEventListener('DOMContentLoaded', function () {
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                // Remove active class from all buttons and contents
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                tabContents.forEach(content => content.classList.remove('active'));
+
+                // Add active class to clicked button
+                this.classList.add('active');
+
+                // Show corresponding tab content
+                const tabId = this.getAttribute('data-tab');
+                document.getElementById(tabId + '-tab').classList.add('active');
+            });
+        });
+    });
+</script>
 </body>
 </html>

@@ -136,11 +136,10 @@ func (h *Handler) ArtistsHandler(w http.ResponseWriter, r *http.Request) {
 		artistID = artistId
 		if err != nil {
 			RenderErrorPage(w, http.StatusInternalServerError, "Internal Server Error", " 	Wrong ID")
-
 			return
 		}
-
 	}
+
 	// URL to fetch all artists
 	artistsURL := "https://groupietrackers.herokuapp.com/api/artists"
 	data := []Artist{}
@@ -151,19 +150,61 @@ func (h *Handler) ArtistsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-
 	var artistData Artist
 	// Check if we're fetching a specific artist by ID
 	if artistID > 0 {
 		for _, artist := range data {
 			if artist.ID == artistID {
-
-				log.Printf("Rendering artist f?or ID: %d\n", artistID)
-
+				log.Printf("Rendering artist for ID: %d\n", artistID)
 				artistData = artist
 
-				RenderTemplate(w, "artist.html", artistData)
+				// Fetch locations data
+				locationsURL := "https://groupietrackers.herokuapp.com/api/locations"
+				locationsResponse := LocationsAPIResponse{}
+				if _, err := h.FetchData(locationsURL, &locationsResponse); err != nil {
+					log.Printf("Error fetching location: %v", err)
+				} else {
+					// Find locations for this artist
+					for _, loc := range locationsResponse.Index {
+						if loc.ID == artistID {
+							artistData.LocationList = loc.Locations
+							break
+						}
+					}
+				}
 
+				// Fetch dates data
+				datesURL := "https://groupietrackers.herokuapp.com/api/dates"
+				datesResponse := DatesAPIResponse{}
+				if _, err := h.FetchData(datesURL, &datesResponse); err != nil {
+					log.Printf("Error fetching dates: %v", err)
+				} else {
+					// Find dates for this artist
+					for _, date := range datesResponse.Index {
+						if date.ID == artistID {
+							artistData.DatesList = date.Dates
+							break
+						}
+					}
+				}
+
+				// Fetch relations data
+				relationsURL := "https://groupietrackers.herokuapp.com/api/relation"
+				relationsResponse := DatesLocationsAPIResponse{}
+				if _, err := h.FetchData(relationsURL, &relationsResponse); err != nil {
+					log.Printf("Error fetching relations: %v", err)
+				} else {
+					// Find relations for this artist
+					for _, rel := range relationsResponse.Index {
+						if rel.ID == artistID {
+							artistData.RelationMap = rel.DatesLocations
+							break
+						}
+					}
+				}
+
+				// Render the template with all the data
+				RenderTemplate(w, "artist.html", artistData)
 				return
 			}
 		}
