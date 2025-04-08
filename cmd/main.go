@@ -21,14 +21,12 @@ func main() {
 	http.HandleFunc("/artist/dates/", h.DatesHandler)
 	http.HandleFunc("/artist/locations/", h.LocationsHandler)
 
-	// SPA route
-	http.HandleFunc("/spa", h.SPAHandler)
 
 	// API endpoints
 	http.HandleFunc("/api/geocode", h.GeocodeHandler)
 
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
-	log.Println("Server running on http://localhost:8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Println("Server running on http://localhost:8090")
+	log.Fatal(http.ListenAndServe(":8090", nil))
 }

@@ -12,14 +12,14 @@ import (
 
 // GeoLocation represents a geographic coordinate
 type GeoLocation struct {
-	Lat     float64 `json:"lat"`
-	Lon     float64 `json:"lon"`
-	Address string  `json:"address"`
+	Lat  float64 `json:"lat"`
+	Lon  float64  `json:"lon"`
+	Address string `json: "address"`
 }
 
 // LocationWithCoordinates extends the Location struct with coordinates
 type LocationWithCoordinates struct {
-	ID        int           `json:"id"`
+	ID int `json:"id"`
 	Locations []GeoLocation `json:"locations"`
 }
 
@@ -29,8 +29,12 @@ var cacheMutex sync.Mutex
 
 // GeocodeHandler handles requests to geocode locations for an artist
 func (h *Handler) GeocodeHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
 	if r.Method != http.MethodGet {
-		RenderErrorPage(w, http.StatusMethodNotAllowed, "Method Not Allowed", "Only GET method is supported.")
+		RenderErrorPage(w, http.StatusMethodNotAllowed, "Method Not allowed", "Only Get method is Supported.")
 		return
 	}
 
@@ -50,14 +54,14 @@ func (h *Handler) GeocodeHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Type assertion to convert data to *LocationsAPIResponse
+	// Type assertion to convert data to *LocationAPIResponse
 	apiResponse, ok := data.(*LocationsAPIResponse)
 	if !ok {
 		http.Error(w, "Invalid data format", http.StatusInternalServerError)
 		return
 	}
 
-	// Find the artist's locations
+	//  Find the artists's locations
 	var artistLocations []string
 	for _, artist := range apiResponse.Index {
 		if fmt.Sprintf("%d", artist.ID) == artistIDStr {
@@ -71,65 +75,62 @@ func (h *Handler) GeocodeHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Geocode each location
-	geoLocations := make([]GeoLocation, 0, len(artistLocations))
-	
-	// Use a wait group to wait for all geocoding requests to complete
+	// Geocode each locations
+	geoLocations := make([]GeoLocation, 0 , len(artistLocations))
+
+	// use of weight group to await for all geocoding requests to complete
+	// Mutex protects the geoLocations slice
 	var wg sync.WaitGroup
-	var mu sync.Mutex // Mutex to protect the geoLocations slice
-	
+	var mu sync.Mutex 
+
 	for _, loc := range artistLocations {
 		wg.Add(1)
 		go func(location string) {
 			defer wg.Done()
-			
-			// Clean the location string (remove "Usa_" prefix, etc.)
+
 			cleanLocation := cleanLocationString(location)
-			
-			// Check if we have this location in cache
+
+			// check if this location is in cache 
 			cacheMutex.Lock()
 			cachedLocation, found := geocodeCache[cleanLocation]
 			cacheMutex.Unlock()
-			
+
 			if found {
 				mu.Lock()
 				geoLocations = append(geoLocations, cachedLocation)
 				mu.Unlock()
 				return
 			}
-			
+
 			// Geocode the location
 			geoLoc, err := geocodeLocation(cleanLocation)
 			if err != nil {
 				log.Printf("Error geocoding location %s: %v\n", cleanLocation, err)
 				return
 			}
-			
+
 			// Add the original address to the result
 			geoLoc.Address = cleanLocation
-			
+
 			// Add to cache
 			cacheMutex.Lock()
 			geocodeCache[cleanLocation] = geoLoc
 			cacheMutex.Unlock()
-			
+
 			// Add to results
 			mu.Lock()
 			geoLocations = append(geoLocations, geoLoc)
 			mu.Unlock()
 		}(loc)
 	}
-	
-	// Wait for all geocoding requests to complete
+
 	wg.Wait()
-	
-	// Create the response
-	response := LocationWithCoordinates{
-		ID:        0, // We'll set this from the artistIDStr
-		Locations: geoLocations,
+
+	response := LocationsAPIResponse{
+		ID: 0,
+		Locations: goeLocations,
 	}
-	
-	// Convert artistIDStr to int for the response
+
 	if id, err := parseInt(artistIDStr); err == nil {
 		response.ID = id
 	}
@@ -182,7 +183,6 @@ func geocodeLocation(location string) (GeoLocation, error) {
 	}
 	defer resp.Body.Close()
 	
-	// Check the response status
 	if resp.StatusCode != http.StatusOK {
 		return GeoLocation{}, fmt.Errorf("geocoding API returned status %d", resp.StatusCode)
 	}
@@ -197,12 +197,10 @@ func geocodeLocation(location string) (GeoLocation, error) {
 		return GeoLocation{}, err
 	}
 	
-	// Check if we got any results
 	if len(results) == 0 {
 		return GeoLocation{}, fmt.Errorf("no results found for location: %s", location)
 	}
 	
-	// Convert the lat/lon strings to float64
 	lat, err := parseFloat(results[0].Lat)
 	if err != nil {
 		return GeoLocation{}, err
@@ -232,3 +230,4 @@ func parseInt(s string) (int, error) {
 	_, err := fmt.Sscanf(s, "%d", &result)
 	return result, err
 }
+
