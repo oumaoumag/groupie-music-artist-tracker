@@ -12,9 +12,9 @@ import (
 
 // GeoLocation represents a geographic coordinate
 type GeoLocation struct {
-	Lat  float64 `json:"lat"`
-	Lon  float64  `json:"lon"`
-	Address string `json: "address"`
+	Lat     float64 `json:"lat"`
+	Lon     float64 `json:"lon"`
+	Address string  `json:"address"`
 }
 
 // LocationWithCoordinates extends the Location struct with coordinates
@@ -26,6 +26,10 @@ type LocationWithCoordinates struct {
 // Cache to store geocoded locations to avoid repeated API calls
 var geocodeCache = make(map[string]GeoLocation)
 var cacheMutex sync.Mutex
+
+// Maximum number of concurrent geocoding requests
+const maxConcurrentRequests = 5
+var geocodingSemaphore = make(chan struct{}, maxConcurrentRequests)
 
 // GeocodeHandler handles requests to geocode locations for an artist
 func (h *Handler) GeocodeHandler(w http.ResponseWriter, r *http.Request) {
@@ -75,24 +79,37 @@ func (h *Handler) GeocodeHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Geocode each locations
-	geoLocations := make([]GeoLocation, 0 , len(artistLocations))
+	// Geocode each location
+	geoLocations := make([]GeoLocation, 0, len(artistLocations))
 
-	// use of weight group to await for all geocoding requests to complete
+	// Use a wait group to await for all geocoding requests to complete
 	// Mutex protects the geoLocations slice
 	var wg sync.WaitGroup
-	var mu sync.Mutex 
+	var mu sync.Mutex
+
+	processedLocations := make(map[string]bool)
 
 	for _, loc := range artistLocations {
+		cleanLocation := cleanLocationString(loc)
+		normalizedLocation := normalizeAddress(cleanLocation)
+
+		// Skip if we've already processed this location
+		if processed, ok := processedLocations[normalizedLocation]; ok && processed {
+			continue
+		}
+		processedLocations[normalizedLocation] = true
+
 		wg.Add(1)
-		go func(location string) {
+		go func(location, cleanLoc, normalizedLoc string) {
 			defer wg.Done()
 
-			cleanLocation := cleanLocationString(location)
+			// Acquire semaphore to limit concurrent API requests
+			geocodingSemaphore <- struct{}{}
+			defer func() { <-geocodingSemaphore }()
 
-			// check if this location is in cache 
+			// Check if this location is in cache
 			cacheMutex.Lock()
-			cachedLocation, found := geocodeCache[cleanLocation]
+			cachedLocation, found := geocodeCache[normalizedLoc]
 			cacheMutex.Unlock()
 
 			if found {
@@ -103,39 +120,39 @@ func (h *Handler) GeocodeHandler(w http.ResponseWriter, r *http.Request) {
 			}
 
 			// Geocode the location
-			geoLoc, err := geocodeLocation(cleanLocation)
+			geoLoc, err := geocodeLocation(normalizedLoc)
 			if err != nil {
-				log.Printf("Error geocoding location %s: %v\n", cleanLocation, err)
+				log.Printf("Error geocoding location %s: %v\n", normalizedLoc, err)
 				return
 			}
 
 			// Add the original address to the result
-			geoLoc.Address = cleanLocation
+			geoLoc.Address = cleanLoc
 
 			// Add to cache
 			cacheMutex.Lock()
-			geocodeCache[cleanLocation] = geoLoc
+			geocodeCache[normalizedLoc] = geoLoc
 			cacheMutex.Unlock()
 
 			// Add to results
 			mu.Lock()
 			geoLocations = append(geoLocations, geoLoc)
 			mu.Unlock()
-		}(loc)
+		}(loc, cleanLocation, normalizedLocation)
 	}
 
 	wg.Wait()
 
 	response := LocationWithCoordinates{
-		ID:        0, 
+		ID:        0,
 		Locations: geoLocations,
 	}
-	
+
 
 	if id, err := parseInt(artistIDStr); err == nil {
 		response.ID = id
 	}
-	
+
 	// Return the geocoded locations as JSON
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)
@@ -143,39 +160,36 @@ func (h *Handler) GeocodeHandler(w http.ResponseWriter, r *http.Request) {
 
 // cleanLocationString cleans up location strings from the API
 func cleanLocationString(location string) string {
-	// Remove prefixes like "usa_" or "_-_"
 	location = strings.ReplaceAll(location, "_", " ")
 	location = strings.ReplaceAll(location, "-", " ")
-	
-	// Replace multiple spaces with a single space
+
 	for strings.Contains(location, "  ") {
 		location = strings.ReplaceAll(location, "  ", " ")
 	}
-	
+
 	return strings.TrimSpace(location)
 }
 
 // geocodeLocation converts a location string to geographic coordinates
 // using the Nominatim OpenStreetMap API
 func geocodeLocation(location string) (GeoLocation, error) {
-	// Construct the URL for the Nominatim API
+	location = normalizeAddress(location)
 	apiURL := "https://nominatim.openstreetmap.org/search"
-	
+
 	// Create URL values for the query parameters
 	params := url.Values{}
 	params.Add("q", location)
 	params.Add("format", "json")
 	params.Add("limit", "1")
-	
-	// Make the request
+
 	req, err := http.NewRequest("GET", apiURL+"?"+params.Encode(), nil)
 	if err != nil {
 		return GeoLocation{}, err
 	}
-	
+
 	// Add a user agent as required by the Nominatim API
 	req.Header.Set("User-Agent", "GroupieTracker/1.0")
-	
+
 	// Send the request
 	client := &http.Client{}
 	resp, err := client.Do(req)
@@ -183,35 +197,35 @@ func geocodeLocation(location string) (GeoLocation, error) {
 		return GeoLocation{}, err
 	}
 	defer resp.Body.Close()
-	
+
 	if resp.StatusCode != http.StatusOK {
 		return GeoLocation{}, fmt.Errorf("geocoding API returned status %d", resp.StatusCode)
 	}
-	
+
 	// Parse the response
 	var results []struct {
 		Lat string `json:"lat"`
 		Lon string `json:"lon"`
 	}
-	
+
 	if err := json.NewDecoder(resp.Body).Decode(&results); err != nil {
 		return GeoLocation{}, err
 	}
-	
+
 	if len(results) == 0 {
 		return GeoLocation{}, fmt.Errorf("no results found for location: %s", location)
 	}
-	
+
 	lat, err := parseFloat(results[0].Lat)
 	if err != nil {
 		return GeoLocation{}, err
 	}
-	
+
 	lon, err := parseFloat(results[0].Lon)
 	if err != nil {
 		return GeoLocation{}, err
 	}
-	
+
 	return GeoLocation{
 		Lat: lat,
 		Lon: lon,
@@ -230,4 +244,15 @@ func parseInt(s string) (int, error) {
 	var result int
 	_, err := fmt.Sscanf(s, "%d", &result)
 	return result, err
+}
+
+// Add address normalization to handle various formats
+func normalizeAddress(address string) string {
+	address = strings.TrimSpace(address)
+	address = strings.ReplaceAll(address, ",", ", ")
+
+	address = strings.ReplaceAll(address, " Usa", " USA")
+	address = strings.ReplaceAll(address, " Uk", " UK")
+
+	return address
 }
