@@ -126,10 +126,11 @@ func (h *Handler) GeocodeHandler(w http.ResponseWriter, r *http.Request) {
 
 	wg.Wait()
 
-	response := LocationsAPIResponse{
-		ID: 0,
-		Locations: goeLocations,
+	response := LocationWithCoordinates{
+		ID:        0, 
+		Locations: geoLocations,
 	}
+	
 
 	if id, err := parseInt(artistIDStr); err == nil {
 		response.ID = id
@@ -230,4 +231,3 @@ func parseInt(s string) (int, error) {
 	_, err := fmt.Sscanf(s, "%d", &result)
 	return result, err
 }
-
