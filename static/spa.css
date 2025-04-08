@@ -1,0 +1,253 @@
+/* SPA Specific Styles */
+
+/* Layout */
+.app-container {
+    display: flex;
+    min-height: calc(100vh - 150px); /* Adjust for header and footer */
+    background-color: #16213e;
+}
+
+/* Artist Sidebar */
+.artist-sidebar {
+    width: 300px;
+    background-color: rgba(0, 0, 0, 0.3);
+    overflow-y: auto;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1rem;
+}
+
+.artist-sidebar h2 {
+    color: #fff;
+    margin-bottom: 1rem;
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+.artist-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.artist-item {
+    display: flex;
+    align-items: center;
+    padding: 0.8rem;
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.artist-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+.artist-item.active {
+    background: linear-gradient(45deg, #00f2fe, #4facfe);
+}
+
+.artist-item img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 1rem;
+}
+
+.artist-item-info h3 {
+    font-size: 1rem;
+    margin: 0;
+    color: #fff;
+}
+
+.artist-item-info p {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0;
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+}
+
+.artist-detail {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    min-height: 200px;
+}
+
+.placeholder-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: rgba(255, 255, 255, 0.5);
+    text-align: center;
+}
+
+.artist-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.artist-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 10px;
+    object-fit: cover;
+    margin-right: 1.5rem;
+}
+
+.artist-header-info h2 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.8rem;
+}
+
+.artist-header-info p {
+    margin: 0.2rem 0;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.artist-members, .artist-concerts {
+    margin-bottom: 1.5rem;
+}
+
+.artist-members h3, .artist-concerts h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.8rem;
+    color: #4facfe;
+}
+
+.members-list, .locations-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.members-list li {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
+
+.locations-list li {
+    background-color: rgba(79, 172, 254, 0.2);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.locations-list li:hover {
+    background-color: rgba(79, 172, 254, 0.4);
+}
+
+.locations-list li.active {
+    background-color: rgba(79, 172, 254, 0.8);
+}
+
+/* Map Container */
+.map-container {
+    flex: 1;
+    min-height: 400px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+}
+
+/* Search in header */
+.search-container-header {
+    display: flex;
+    margin-top: 1rem;
+}
+
+.search-container-header .search-input {
+    flex: 1;
+    max-width: 400px;
+    margin-right: 0.5rem;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .app-container {
+        flex-direction: column;
+    }
+    
+    .artist-sidebar {
+        width: 100%;
+        max-height: 200px;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .artist-list {
+        flex-direction: row;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+    }
+    
+    .artist-item {
+        min-width: 200px;
+    }
+}
+
+@media (max-width: 768px) {
+    .artist-header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .artist-image {
+        margin-right: 0;
+        margin-bottom: 1rem;
+    }
+    
+    .members-list, .locations-list {
+        justify-content: center;
+    }
+    
+    .search-container-header {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .search-container-header .search-input {
+        margin-right: 0;
+        margin-bottom: 0.5rem;
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .artist-item {
+        min-width: 150px;
+    }
+    
+    .artist-detail {
+        padding: 1rem;
+    }
+    
+    .map-container {
+        min-height: 300px;
+    }
+}
