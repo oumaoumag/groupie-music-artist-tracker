@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Tour locations information">
+    <title>Tour Locations</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+</head>
+<body>
+    <header class="header">
+        <h1><i class="fas fa-map-marker-alt"></i> Tour Locations</h1>
+        <a href="javascript:history.back()" class="back-button" title="Go Back">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+    </header>
+    
+    <section class="tour-info">
+        <table class="tour-dates-table">
+            <thead>
+                <tr>
+                    <th>Locations</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <ul>
+                            {{range .Locations}}
+                            <li class="location-item">{{.}}</li>
+                            {{end}}
+                        </ul>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+   
+    <footer class="footer">
+        <p><i class="far fa-copyright"></i> 2024 Groupie-Tracker. All rights reserved.</p>
+        <div class="social-links">
+            <a href="https://github.com/garveyshah" target="_blank" aria-label="Ouma's GitHub Profile"><i class="fab fa-github"></i> Ouma</a>
+            <a href="https://github.com/steodhiambo" target="_blank" aria-label="Steve's GitHub Profile"><i class="fab fa-github"></i> Stephen</a>
+        </div>
+    </footer>
+</body>
+</html>
