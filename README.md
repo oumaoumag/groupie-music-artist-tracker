@@ -1,4 +1,4 @@
-# Groupie-Tracker-Geolocalization
+# Groupie-Tracker
 
 ## Description:
 
