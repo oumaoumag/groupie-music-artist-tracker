@@ -1,10 +1,12 @@
-# Groupie-Tracker-Search-Bar
+# Groupie-Tracker-Geolocalization
 
 ## Description:
 
 Groupie Trackers is a web-based application that consumes data from an API containing information about various artists, their concert locations, dates, and relations between these data points. The site is designed to display the information in a user-friendly way using different visualization methods (e.g., cards, tables). This project involves handling client-server interactions, where events or actions trigger communication with the server to fetch and display dynamic information.
 
 Additionally, the project includes a search bar feature that allows users to search for artists, band members, concert locations, first album dates, and creation dates. The search functionality is case-insensitive and provides real-time typing suggestions, displaying the relevant category of the search result (e.g., "Freddie Mercury -> member").
+
+This version of the project has been enhanced with geolocalization features, converting it into a Single Page Application (SPA) that maps concert locations of artists/bands by converting addresses to geographic coordinates.
 ## Features:
 - Artists Information: Display artist details such as names, images, years active, debut album dates, and members.
 - Concert Locations: Show past and upcoming concert locations for the artists.
@@ -24,6 +26,8 @@ Additionally, the project includes a search bar feature that allows users to sea
 
 - The search input is case-insensitive and provides real-time typing suggestions. Each suggestion displays the type of search case identified (e.g., "Freddie Mercury -> member").
 
+- Geolocalization: Concert locations are mapped using geographic coordinates, allowing users to visualize where artists have performed on an interactive map.
+
 ## Client-Server Interaction:
 
 This project implements a client-server feature where events trigger actions on the client side that send requests to the server and receive responses. An example of this could be displaying specific artist information when a user selects an artist from the list, which then sends a request to the server to fetch detailed data about that artist.
@@ -39,18 +43,20 @@ This project implements a client-server feature where events trigger actions on 
 To run the Program, you'll need to have Go installed on your system. After that, follow these steps:
 1. Clone the Repository:
    ```sh
-   git clone https://learn.zone01kisumu.ke/git/steodhiambo/groupie-tracker-search-bar.git
+   git clone https://learn.zone01kisumu.ke/git/steodhiambo/groupie-tracker-geolocalization.git
 2. Navigate to the Project Directory:
    ```sh
-   cd groupie-tracker-search-bar
+   cd groupie-tracker-geolocalization
    ```
-   
+
 3. Run the Project:
    ```sh
     go run ./cmd
    ```
 
 4. Open the site in a browser to view and interact with the artist data.
+
+5. To access the Single Page Application with geolocalization features, navigate to `/spa` in your browser (e.g., `http://localhost:8080/spa`).
 
 ## Contribution:
 
@@ -70,5 +76,3 @@ We welcome contributions to project! To contribute, follow these steps:
 ## License:
 
 This project is licensed under the [MIT](https://opensource.org/license/mit) License.
-
-

@@ -5,15 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Error {{.Code}} - {{.Message}}</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" type="text/css" href="/static/style.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
 </head>
 <body class="error-page">
     <header class="header">
+        <div class="main-nav">
+            <a href="/" class="nav-button" title="Home">
+                <i class="fas fa-home"></i>
+            </a>
+            <a href="javascript:history.back()" class="nav-button" title="Go Back">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+        </div>
         <h1><i class="fas fa-exclamation-circle"></i> Error {{.Code}}</h1>
-        <a href="/" class="home-button" title="Home">
-            <i class="fas fa-home"></i>
-        </a>
+        <div class="main-nav">
+            <a href="#" id="theme-toggle" title="Toggle Dark/Light Mode">
+                <i class="fas fa-moon"></i>
+            </a>
+        </div>
     </header>
+
 
     <section class="error-section">
         <h2>{{.Message}}</h2>
@@ -23,7 +34,7 @@
         </a>
     </section>
 
-    
+
     <footer class="footer">
         <p><i class="far fa-copyright"></i> 2024 Groupie-Tracker. All rights reserved.</p>
         <div class="social-links">
@@ -31,5 +42,6 @@
             <a href="https://github.com/steodhiambo" target="_blank" aria-label="Steve's GitHub Profile"><i class="fab fa-github"></i> Stephen</a>
         </div>
     </footer>
+    <script src="/static/js/theme.js"></script>
 </body>
 </html>

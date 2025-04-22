@@ -3,57 +3,328 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Detailed information about {{.Name}} - tours, dates, and more">
-    <title>{{.Name}} - Artist Information</title>
+    <title>{{.Name}} - Artist Details</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" type="text/css" href="/static/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet-polylinedecorator/dist/leaflet.polylineDecorator.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+    <style>
+        .loading-spinner {
+            text-align: center;
+            padding: 20px;
+            font-size: 18px;
+            color: #007bff;
+        }
+    
+        .loading-spinner i {
+            margin-right: 10px;
+        }
+    </style>
 </head>
+
 <body>
     <header class="header">
+        <div class="main-nav">
+            <a href="/" class="nav-button" title="Home">
+                <i class="fas fa-home"></i>
+            </a>
+        </div>
         <h1><i class="fas fa-user-circle"></i> {{.Name}}</h1>
-        <a href="javascript:history.back()" class="back-button" title="Go Back">
-            <i class="fas fa-arrow-left"></i>
-        </a>
+        <div class="main-nav">
+            <a href="#" id="theme-toggle" title="Toggle Dark/Light Mode">
+                <i class="fas fa-moon"></i>
+            </a>
+        </div>
     </header>
 
     <section class="artist-details">
         <div class="artist-card centered">
-            <img src="{{.Image}}" alt="{{.Name}}" loading="lazy">
-            
-            <div class="artist-info">
-                <p><i class="fas fa-calendar-plus"></i> <strong>Formation Date:</strong> {{.CreationDate}}</p>
-                <p><i class="fas fa-compact-disc"></i> <strong>First Album:</strong> {{.FirstAlbum}}</p>
-                <p><i class="fas fa-users"></i> <strong>Members:</strong></p>
-                <ul class="members-list">
-                    {{range .Members}}
-                    <li>{{.}}</li>
-                    {{end}}
-                </ul>
+            <div class="artist-header">
+                <img src="{{.Image}}" alt="{{.Name}}" loading="lazy">
+
+                <div class="artist-info">
+                    <h2>{{.Name}}</h2>
+                    <p><i class="fas fa-calendar-plus"></i> <strong>Formation Date:</strong> {{.CreationDate}}</p>
+                    <p><i class="fas fa-compact-disc"></i> <strong>First Album:</strong> {{.FirstAlbum}}</p>
+                    <p><i class="fas fa-users"></i> <strong>Members:</strong></p>
+                    <ul class="members-list">
+                        {{range .Members}}
+                        <li>{{.}}</li>
+                        {{end}}
+                    </ul>
+                    </div>
             </div>
 
-            <div class="action-buttons">
-                <a href="/artist/relations/{{.ID}}" class="artist-button">
-                    <i class="fas fa-project-diagram"></i> Relations
-                </a>
-               
-                <a href="/artist/dates//{{.ID}}" class="artist-button">
-                    <i class="fas fa-calendar-alt"></i> Concert Dates
-                </a>
-                
-                <a href="/artist/locations/{{.ID}}" class="artist-button">
-                    <i class="fas fa-map-marker-alt"></i> Tour Locations
-                </a>
+            <div class="artist-tabs">
+                <div class="tabs-nav">
+                    <button class="tab-btn active" data-tab="dates">
+                        <i class="fas fa-calendar-alt"></i> Dates
+                    </button>
+                    <button class="tab-btn" data-tab="locations">
+                        <i class="fas fa-map-marker-alt"></i> Locations
+                    </button>
+                    <button class="tab-btn" data-tab="map">
+                        <i class="fas fa-map"></i> Tour Map
+                    </button>
+                </div>
+
+                <div id="dates-tab" class="tab-content active">
+                    <h3>Concert Dates</h3>
+                    <ul class="dates-list">
+                        {{range .DatesList}}
+                        <li>{{.}}</li>
+                        {{end}}
+                    </ul>
+                </div>
+
+                <div id="locations-tab" class="tab-content">
+                    <!-- Locations content -->
+                    <h3>Tour Locations</h3>
+                    <ul class="locations-list">
+                        {{range .LocationList}}
+                        <li>{{.}}</li>
+                        {{end}}
+                    </ul>
+                </div>
+
+                <div id="map-tab" class="tab-content">
+                    <div id="map-container"></div>
+                    <div id="map-loading" class="loading-spinner" style="display: none;">
+                        <i class="fas fa-spinner fa-spin"></i> Loading map data...
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    
     <footer class="footer">
-        <p><i class="far fa-copyright"></i> 2024 Groupie-Tracker. All rights reserved.</p>
+        <p><i class="far fa-copyright"></i> 2025 Groupie-Tracker. All rights reserved.</p>
         <div class="social-links">
             <a href="https://github.com/garveyshah" target="_blank" aria-label="Ouma's GitHub Profile"><i class="fab fa-github"></i> Ouma</a>
             <a href="https://github.com/steodhiambo" target="_blank" aria-label="Steve's GitHub Profile"><i class="fab fa-github"></i> Stephen</a>
         </div>
     </footer>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get all tab buttons and content
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+        let map = null;
+        let polyline = null;
+        let decorator = null;
+        let markerCluster = null;
+        let mapDataLoaded = false;
+        let mapInitialized = false;
+
+        // Get artist ID from the current page URL
+        const pathParts = window.location.pathname.split('/');
+        const artistId = pathParts[pathParts.length - 1];
+
+        // Preload location data when page loads
+        preloadLocationData();
+
+        function drawPath(locations) {
+            // Remove existing polyline and decorator if they exist
+            if (polyline) {
+                map.removeLayer(polyline);
+            }
+            if (decorator) {
+                map.removeLayer(decorator);
+            }
+
+            // Create coordinates array from locations
+            const coordinates = locations.map(loc => [loc.lat, loc.lon]);
+
+            // Create the polyline
+            polyline = L.polyline(coordinates, {
+                color: 'red',
+                weight: 3,
+                opacity: 0.7
+            }).addTo(map);
+
+            // Add arrow decorations to show direction of tour
+            decorator = L.polylineDecorator(polyline, {
+                patterns: [
+                    {
+                        offset: '5%',
+                        repeat: '10%',
+                        symbol: L.Symbol.arrowHead({
+                            pixelSize: 12,
+                            polygon: false,
+                            pathOptions: {
+                                stroke: true,
+                                color: 'blue',
+                                weight: 2
+                            }
+                        })
+                    }
+                ]
+            }).addTo(map);
+        }
+
+        // Add click event to each tab button
+        tabButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all buttons and contents
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                tabContents.forEach(content => content.classList.remove('active'));
+
+                // Add active class to clicked button
+                this.classList.add('active');
+
+                // Show corresponding content
+                const tabId = this.getAttribute('data-tab');
+                const content = document.getElementById(tabId + '-tab');
+                if (content) {
+                    content.classList.add('active');
+                } else {
+                    console.error('Tab content not found for:', tabId);
+                }
+
+                // Initialize map if map tab is selected and map isn't already initialized
+                if (tabId === 'map' && !map) {
+                    initMap();
+                }
+            });
+        });
+
+        // Ensure the first tab is active by default
+        if (tabContents.length > 0) {
+            tabContents[0].classList.add('active');
+        }
+
+        // Preload location data to improve perceived performance
+        function preloadLocationData() {
+            // Check if we have cached data in localStorage
+            const cacheKey = `artist_locations_${artistId}`;
+            const cachedData = localStorage.getItem(cacheKey);
+
+            if (cachedData) {
+                try {
+                    const data = JSON.parse(cachedData);
+                    // Check if cache is still fresh (less than 1 day old)
+                    const cacheTime = localStorage.getItem(`${cacheKey}_time`);
+                    const now = Date.now();
+                    if (cacheTime && (now - parseInt(cacheTime)) < 86400000) { // 24 hours
+                        console.log('Using cached location data');
+                        mapDataLoaded = true;
+                        return;
+                    }
+                } catch (e) {
+                    console.error('Error parsing cached data:', e);
+                }
+            }
+
+            // Fetch data in the background
+            fetch(`/api/geocode?id=${artistId}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Store in localStorage for future use
+                    try {
+                        localStorage.setItem(cacheKey, JSON.stringify(data));
+                        localStorage.setItem(`${cacheKey}_time`, Date.now().toString());
+                    } catch (e) {
+                        console.warn('Could not cache location data:', e);
+                    }
+                    mapDataLoaded = true;
+
+                    // If map is already visible, update it
+                    if (mapInitialized) {
+                        displayLocations(data);
+                    }
+                })
+                .catch(error => console.error('Error preloading locations:', error));
+        }
+
+        function initMap() {
+            if (mapInitialized) return;
+
+            // Show loading indicator
+            document.getElementById('map-loading').style.display = 'block';
+
+            // Initialize the map
+            map = L.map('map-container').setView([0, 0], 2);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Initialize marker cluster group
+            markerCluster = L.markerClusterGroup({
+                chunkedLoading: true,
+                spiderfyOnMaxZoom: true
+            });
+            map.addLayer(markerCluster);
+
+            mapInitialized = true;
+
+            // Get location data
+            const cacheKey = `artist_locations_${artistId}`;
+            const cachedData = localStorage.getItem(cacheKey);
+
+            if (cachedData && mapDataLoaded) {
+                try {
+                    const data = JSON.parse(cachedData);
+                    displayLocations(data);
+                } catch (e) {
+                    console.error('Error using cached data:', e);
+                    fetchFreshData();
+                }
+            } else {
+                fetchFreshData();
+            }
+        }
+
+        function fetchFreshData() {
+            fetch(`/api/geocode?id=${artistId}`)
+                .then(response => response.json())
+                .then(data => {
+                    displayLocations(data);
+
+                    // Update cache
+                    try {
+                        const cacheKey = `artist_locations_${artistId}`;
+                        localStorage.setItem(cacheKey, JSON.stringify(data));
+                        localStorage.setItem(`${cacheKey}_time`, Date.now().toString());
+                    } catch (e) {
+                        console.warn('Could not cache location data:', e);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading locations:', error);
+                    document.getElementById('map-loading').textContent = 'Error loading map data. Please try again.';
+                });
+        }
+
+        function displayLocations(data) {
+            // Hide loading indicator
+            document.getElementById('map-loading').style.display = 'none';
+
+            // Clear existing markers
+            markerCluster.clearLayers();
+
+            const markers = [];
+            data.locations.forEach(location => {
+                const marker = L.marker([location.lat, location.lon])
+                    .bindPopup(location.address);
+                markerCluster.addLayer(marker);
+                markers.push(marker);
+            });
+
+            // Draw path between markers
+            drawPath(data.locations);
+
+            // Fit map to show all markers
+            if (markers.length > 0) {
+                const group = new L.featureGroup(markers);
+                map.fitBounds(group.getBounds());
+            }
+        }
+    });
+</script>
+    <script src="/static/js/theme.js"></script>
 </body>
 </html>

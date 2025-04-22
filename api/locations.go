@@ -27,7 +27,6 @@ func (h *Handler) LocationsHandler(w http.ResponseWriter, r *http.Request) {
 	// Get and split the URL path
 	path := r.URL.Path
 	parts := strings.Split(path, "/")
-	// log.Printf("parts of split locations URL -> %v", parts)
 
 	if len(parts) < 3 {
 		http.Error(w, "Artist ID not found in URL", http.StatusBadRequest)
